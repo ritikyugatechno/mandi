@@ -1,45 +1,27 @@
-// src/app/getData/page.tsx
 "use client";
-import React, { useEffect, useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
 import { columns } from "./column";
 import { DataTable } from "./data-table";
+import { useFetchSale } from "./query";
+import { addData } from "./dataSlice";
 
-
-const fetchData = async () => {
-  const response = await fetch("/api/sale");
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return response.json();
-};
 const GetDataPage = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
+  const { data, isLoading, isError } = useFetchSale();
+  const dispatch = useDispatch();
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {isError} </p>;
+  // const hello = useSelector(state => state.datas)
 
-    useEffect(() => {
-      const getData = async () => {
-        try {
-          const fetchedData = await fetchData();
-          setData(fetchedData);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      getData();
-    }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleInput = (e) => {
+    console.log(e.target.value)
+    dispatch(addData('hello'))
+  }
 
   return (
     <div className="container mx-auto py-10">
       <DataTable columns={columns} data={data} />
+      <input type="text" onChange={handleInput} />
+      {/* <div>{hello}</div> */}
     </div>
   );
 };

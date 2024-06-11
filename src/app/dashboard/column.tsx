@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { log } from "console";
 import { useState } from "react";
 
 export type saleData = {
@@ -33,11 +32,7 @@ export const columns: ColumnDef<saleData>[] = [
     accessorKey: "serialNo",
     header: "Serial Number",
     cell(props) {
-      console.log(props.row.index);
-      console.log(props.row);
-      console.log(props);
       const handleChange = (newValue: React.SetStateAction<string>) => {
-        console.log(newValue);
       };
       return (
         <input
@@ -58,7 +53,6 @@ export const columns: ColumnDef<saleData>[] = [
       // Handle the change event
       const handleChange = (newValue: string) => {
         setValue(newValue); // Update the state with the new value
-        console.log(newValue); // Log the new value
       };
 
       return (

@@ -1,7 +1,11 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./store";
+import { updataData } from "./dataSlice";
 
 export type saleData = {
   id: number;
@@ -46,21 +50,20 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "supplierName",
     header: "Supplier Name",
-    cell: (props) => {
-      // Initialize state with the initial value from props
-      const [value, setValue] = useState(props.getValue());
-
-      // Handle the change event
-      const handleChange = (newValue: string) => {
-        setValue(newValue); // Update the state with the new value
-      };
-
+    cell: ({ row, column }) => {
+      const datas = useSelector((state: RootState) => state.datas)
+      const thisValue = datas[row.index].supplierName
+      const dispatch = useDispatch()
+      const onChangeHandle = (e) => {
+        const newArray = {
+          row: row.index,
+          column: "supplierName",
+          value: e.target.value,
+        }
+        dispatch(updataData(newArray))
+      }
       return (
-        <input
-          type="text"
-          value={value} // Controlled input value from state
-          onChange={(e) => handleChange(e.target.value)} // Update state on change
-        />
+        <Input defaultValue={thisValue} onChange={onChangeHandle} />
       );
     },
   },

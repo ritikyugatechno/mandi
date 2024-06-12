@@ -7,7 +7,8 @@ import { addData } from "./dataSlice";
 import { RootState } from "./store";
 
 const GetDataPage = () => {
-  const { data, isLoading, isError } = useFetchSale();
+  const date = new Date();
+  const { data, isLoading, isError } = useFetchSale(date);
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.datas)
   const firstAdd = useSelector((state: RootState) => state.firstAdd)

@@ -19,16 +19,12 @@ import {
 } from "@/components/ui/select";
 import {
   Command,
-  CommandDialog,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Weight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -91,6 +87,10 @@ export default function Sale() {
   const [responseMessage, setResponseMessage] = useState("");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
+  //Command
+  const [commandData, setCommandData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
+
   const handleInputChange = (index: number, value: string) => {
     const newValues = [...form.getValues("weight")];
     newValues[index] = value;
@@ -114,7 +114,7 @@ export default function Sale() {
         },
         body: JSON.stringify(formData),
       });
-      console.log(response);
+      console.log("respone is", response);
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -138,6 +138,38 @@ export default function Sale() {
       });
     }
     setRows([...rows, ...newFields]);
+  };
+
+  useEffect(() => {
+    fetch("/api/dashboard/get-data-by-date")
+      .then((response) => {
+        response.json().then((data) => {
+          console.log("useEffect", data);
+          setFilterData(data);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // Handle filter to ensure unique supplier names
+  const handleFilter = (value) => {
+    if (value === "") {
+      setCommandData([]);
+      return;
+    }
+
+    const res = filterData
+      .filter((f) => f.supplierName.toLowerCase().includes(value.toLowerCase()))
+      .reduce((unique, item) => {
+        if (!unique.some((obj) => obj.supplierName === item.supplierName)) {
+          unique.push(item);
+        }
+        return unique;
+      }, []);
+
+    setCommandData(res);
   };
 
   return (
@@ -172,12 +204,28 @@ export default function Sale() {
                   <Command>
                     <FormControl>
                       <CommandInput
-                        onValueChange={field.onChange}
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleFilter(value);
+                        }}
                         placeholder="Enter Supplier Name..."
                       />
                     </FormControl>
                     <CommandList>
-                      <CommandGroup></CommandGroup>
+                      <CommandGroup>
+                        {commandData.map((c, index) => (
+                          <CommandItem
+                            key={index}
+                            onSelect={() => {
+                              form.setValue("supplierName", c.supplierName);
+                              setCommandData([]);
+                            }}
+                          >
+                            {c.supplierName}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
                     </CommandList>
                   </Command>
                 </FormItem>
@@ -195,7 +243,9 @@ export default function Sale() {
                         onValueChange={field.onChange}
                         placeholder="Enter Farmer Name..."
                       />
-                      <CommandList></CommandList>
+                      <CommandList>
+                        <CommandGroup></CommandGroup>
+                      </CommandList>
                     </Command>
                   </FormControl>
                 </FormItem>
@@ -250,7 +300,12 @@ export default function Sale() {
                         onValueChange={field.onChange}
                         placeholder="Enter Customer Name..."
                       />
-                      <CommandList></CommandList>
+                      <CommandList>
+                        <CommandGroup>
+                          <CommandItem> Hello </CommandItem>
+                          <CommandItem> He </CommandItem>
+                        </CommandGroup>
+                      </CommandList>
                     </Command>
                   </FormControl>
                 </FormItem>
@@ -360,11 +415,10 @@ export default function Sale() {
                         <Calendar
                           mode="single"
                           selected={date}
-                          onSelect={(newDate)=>{
-                              setDate(newDate)
-                              setIsPopoverOpen(false)
+                          onSelect={(newDate) => {
+                            setDate(newDate);
+                            setIsPopoverOpen(false);
                           }}
-                          
                         />
                       </PopoverContent>
                     </Popover>

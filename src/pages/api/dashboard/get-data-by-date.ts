@@ -15,11 +15,8 @@ export default async function handler(
     return res.status(200).json(data);
   } else if (req.method === "POST") {
     const date = req.body.date
-    const data = await prisma.formData.findMany({
-      where: {
-        date: date
-      }
-    });
+    console.log(date)
+    const data = await prisma.formData.findMany();
     return res.status(200).json(data);
   } else {
     res.setHeader("Allow", ["GET", "POST"]);

@@ -31,22 +31,7 @@ export type saleData = {
   date: Date;
 };
 
-// const handleInputChange = ({ row, column }) => {
-//   const datas = useSelector((state: RootState) => state.datas)
-//   const thisValue = datas[row.index].supplierName
-//   const dispatch = useDispatch()
-//   const onChangeHandle = (e) => {
-//     const newArray = {
-//       row: row.index,
-//       column: "supplierName",
-//       value: e.target.value,
-//     }
-//     dispatch(updataData(newArray))
-//   }
-//   return (
-//     <Input defaultValue={thisValue} onChange={onChangeHandle} />
-//   );
-// }
+
 
 const handleInputChange = ({ row, column }) => {
   const datas = useSelector((state: RootState) => state.datas);

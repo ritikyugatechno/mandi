@@ -1,5 +1,5 @@
 'use client'
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   firstAdd: true,
@@ -13,18 +13,9 @@ export const dataSlice = createSlice({
       state.datas = action.payload;
       state.firstAdd = false;
     },
-    removeData: (state, action) => {
-      // state.datas = state.todos.filter((todo) => todo.id !== action.payload)
-    },
-    updataData: (state, action) => {
-      const newArray = action.payload
-      const row = newArray.row;
-      const column = newArray.column
-      state.datas[row][column] = newArray.value
-    }
   }
 })
 
-export const { addData, removeData, updataData } = dataSlice.actions
+export const { addData } = dataSlice.actions
 
 export default dataSlice.reducer

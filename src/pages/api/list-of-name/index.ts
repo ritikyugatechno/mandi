@@ -17,7 +17,23 @@ export default async function handler(
         vclNo: true
       }
     });
-    return res.status(200).json(data);
+    type FormDataKeys = 'supplierName' | 'farmerName' | 'customerName' | 'itemName' | 'vclNo';
+
+    const getFilteredData = (name: FormDataKeys) => {
+      const mapList = data.map(item => item[name]);
+      const filteredMapList = mapList.filter((name, index) => {
+        return mapList.indexOf(name) === index;
+      });
+      return filteredMapList
+    }
+
+    return res.status(200).json({
+      'supplierName': getFilteredData('supplierName'),
+      'farmerName': getFilteredData('farmerName'),
+      'customerName': getFilteredData('customerName'),
+      'itemName': getFilteredData('itemName'),
+      'vclNo': getFilteredData('vclNo')
+    });
   }
   else if (req.method === "POST") {
     // const data = req.body;

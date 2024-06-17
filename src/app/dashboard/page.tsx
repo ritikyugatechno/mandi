@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 const GetDataPage = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  
+
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.datas);
   const firstAdd = useSelector((state: RootState) => state.firstAdd);
@@ -37,7 +37,7 @@ const GetDataPage = () => {
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
     setIsPopoverOpen(false);
-    
+
     // Refetch data from backend based on selected date
     await refetch(newDate);
   };

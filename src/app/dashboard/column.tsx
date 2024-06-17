@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import { updataData } from "./dataSlice";
@@ -35,7 +34,7 @@ export type saleData = {
 
 const handleInputChange = ({ row, column }) => {
   const datas = useSelector((state: RootState) => state.datas);
-  const thisValue = datas[row.index][column.id  ];
+  const thisValue = datas[row.index][column.id];
   const dispatch = useDispatch();
   const onChangeHandle = (e) => {
     const newArray = {

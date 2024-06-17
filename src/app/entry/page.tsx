@@ -18,7 +18,9 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
+  CommandItem,
   CommandList,
+  CommandShortcut,
 } from "@/components/ui/command";
 import {
   Select,
@@ -27,22 +29,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
- 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import React from "react";
+import { useFetchListOfNames } from "./data/query";
 
 const Entry = () => {
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = React.useState<Date>();
   const form = useForm<z.infer<typeof formSchema>>(formObject);
+
+  const { data, isError, isLoading, refetch } = useFetchListOfNames();
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return isError;
+  }
+  console.log("data is", data);
   return (
     <>
       <Form {...form}>
@@ -60,7 +72,7 @@ const Entry = () => {
                       type={field.type}
                       className={`${field.className} mt-40 `}
                       placeholder={field.placeholder}
-                      autoFocus={field.autofocus} 
+                      autoFocus={field.autofocus}
                     />
                     <FormMessage />
                   </FormItem>
@@ -77,7 +89,9 @@ const Entry = () => {
                     <Command className="rounded-lg border shadow-md">
                       <CommandInput placeholder="Type a command or search..." />
                       <CommandList>
-                        <CommandGroup></CommandGroup>
+                        <CommandGroup>
+                          
+                        </CommandGroup>
                       </CommandList>
                     </Command>
                     <FormDescription>{field.description}</FormDescription>

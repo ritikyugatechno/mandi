@@ -1,18 +1,16 @@
-"use client"
-import { api, methods } from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
+"use client";
+import { api, methods } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
-const fetchSale = async (date: Date) => {
-  console.log(date)
-  const response = await api(methods.post, "/api/dashboard/get-data-by-date", { date });
-    console.log(response);
-    
-  return response
+const fetchListOfNames = async () => {
+  const response = await api(methods.get, "/api/list-of-name");
+  console.log(response);
+  return response;
 };
 
-export const useFetchSale = (date: Date) => {
+export const useFetchListOfNames = () => {
   return useQuery({
-    queryKey: ['fetchsale'],
-    queryFn: async () => await fetchSale(date)
+    queryKey: ["fetchlistofnames"],
+    queryFn: async () => await fetchListOfNames(),
   });
 };

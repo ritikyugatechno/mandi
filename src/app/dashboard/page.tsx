@@ -12,8 +12,11 @@ import { RootState } from './store';
 import { DataTable } from './data-table';
 import { columns } from './column';
 import { cn } from '@/lib/utils';
+import useKeyboardShortcut from './useKeyboardShortcut';
 
 const GetDataPage = () => {
+
+  useKeyboardShortcut('Alt+1', '/entry');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 

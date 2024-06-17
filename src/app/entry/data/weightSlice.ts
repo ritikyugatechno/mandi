@@ -1,30 +1,27 @@
 'use client'
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  firstAdd: true,
-  datas: [] as any
+  weight: ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'] as any
 }
-export const dataSlice = createSlice({
+export const weightSlice = createSlice({
   name: 'data',
   initialState,
   reducers: {
-    addData: (state, action) => {
-      state.datas = action.payload;
-      state.firstAdd = false;
+    addWeight: (state) => {
+      state.weight.push('0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
     },
-    removeData: (state, action) => {
-      // state.datas = state.todos.filter((todo) => todo.id !== action.payload)
+    removeWeight: (state) => {
+      state.weight = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'];
     },
-    updataData: (state, action) => {
+    updataWeight: (state, action) => {
       const newArray = action.payload
-      const row = newArray.row;
-      const column = newArray.column
-      state.datas[row][column] = newArray.value
+      const index = newArray.index;
+      state.weight[index] = newArray.value
     }
   }
 })
 
-export const { addData, removeData, updataData } = dataSlice.actions
+export const { addWeight, removeWeight, updataWeight } = weightSlice.actions
 
-export default dataSlice.reducer
+export default weightSlice.reducer

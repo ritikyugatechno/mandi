@@ -16,7 +16,8 @@ model FormData {
   supplierName  String
   farmerName  String
   typeItem String 
-  nug Int
+  cNug Int
+  sNug Int
   customerName String
   itemName String
   date DateTime
@@ -24,5 +25,4 @@ model FormData {
   freightRate Float
   otherCharge Float
   labourRate  Float 
-  // weight String?
 }

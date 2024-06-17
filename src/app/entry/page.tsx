@@ -60,7 +60,7 @@ const Entry = () => {
                       type={field.type}
                       className={`${field.className} mt-40 `}
                       placeholder={field.placeholder}
-                      autoFocus={field.autofocus}
+                      autoFocus={field.autofocus} 
                     />
                     <FormMessage />
                   </FormItem>

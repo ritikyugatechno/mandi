@@ -1,8 +1,8 @@
-'use client'
+"use client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../queryClient";
-import { Provider } from 'react-redux'
-import { store } from "./store";
+import { Provider } from "react-redux";
+import { store } from "./data/store";
 
 export default function DashboardLayout({
   children,
@@ -11,9 +11,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        {children}
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </QueryClientProvider>
   );
 }

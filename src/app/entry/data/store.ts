@@ -1,9 +1,10 @@
 'use client'
 import { configureStore } from '@reduxjs/toolkit';
-import dataReducer from './dataSlice';
+import lastEntryReducer from './lastEntrySlice';
+import weightReducer from './weightSlice';
 
 export const store = configureStore({
-  reducer: dataReducer
+  reducer: { lastEntryReducer, weightReducer }
 })
 
 export type RootState = ReturnType<typeof store.getState>

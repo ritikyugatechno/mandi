@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
- 
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -39,10 +39,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import React from "react";
+import { useListOfName } from "./data/query";
 
 const Entry = () => {
   const [date, setDate] = React.useState<Date>()
   const form = useForm<z.infer<typeof formSchema>>(formObject);
+  const { data, isLoading, isError, refetch } = useListOfName();
   return (
     <>
       <Form {...form}>

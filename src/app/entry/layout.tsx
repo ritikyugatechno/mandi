@@ -2,7 +2,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../queryClient";
 import { Provider } from 'react-redux'
-import { store } from "./store";
+import { store } from "./data/store";
 
 export default function DashboardLayout({
   children,

@@ -20,9 +20,6 @@ export default async function handler(
     return res.status(200).json(data);
   }
   else if (req.method === "POST") {
-    // const data = req.body;
-    // const newFormData = await prisma.formData.create({ data: data });
-    // return res.status(200).json(newFormData);
   }
   else {
     res.setHeader("Allow", ["GET", "POST"]);

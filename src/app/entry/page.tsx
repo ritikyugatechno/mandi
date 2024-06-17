@@ -40,11 +40,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React from "react";
+import React, { useState } from "react";
 import { useFetchListOfNames } from "./data/query";
 
 const Entry = () => {
   const [date, setDate] = React.useState<Date>();
+  const [commandValue, setCommandValue] = useState("");
   const form = useForm<z.infer<typeof formSchema>>(formObject);
 
   const { data, isError, isLoading, refetch } = useFetchListOfNames();
@@ -52,9 +53,9 @@ const Entry = () => {
     return <div>Loading...</div>;
   }
   if (isError) {
-    return isError;
+    return <div>Error loading data</div>;
   }
-  console.log("data is", data);
+
   return (
     <>
       <Form {...form}>
@@ -87,10 +88,26 @@ const Entry = () => {
                   <FormItem>
                     <FormLabel>{field.name}</FormLabel>
                     <Command className="rounded-lg border shadow-md">
-                      <CommandInput placeholder="Type a command or search..." />
+                      <CommandInput
+                        placeholder="Type a command or search..."
+                        value={commandValue}
+                        onChange={(e) => {
+                          setCommandValue(e.target.value);
+                        }}
+                      />
                       <CommandList>
                         <CommandGroup>
-                          
+                          {data?.[field.name].map((name, index) => (
+                            <CommandItem
+                              key={index}
+                              onSelect={() => {
+                                form.setValue(field.name, name);
+                                setCommandValue(name);
+                              }}
+                            >
+                              {name}
+                            </CommandItem>
+                          ))}
                         </CommandGroup>
                       </CommandList>
                     </Command>

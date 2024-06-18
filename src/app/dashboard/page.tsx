@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useFetchSale } from "./query";
+import { useFetchSale, useFetchVclNo } from "./query";
 import { addData } from "./dataSlice";
 import { RootState } from "./store";
 import { DataTable } from "./data-table";
@@ -28,39 +28,29 @@ const GetDataPage = () => {
   const tableData = useSelector((state: RootState) => state.datas);
   const firstAdd = useSelector((state: RootState) => state.firstAdd);
 
-  // Fetch data based on selected date
   const { data, isLoading, isError, refetch } = useFetchSale(selectedDate, selectedVclNo);
-
-  // Handle loading and error states
+  const {data : vclData,isLoading: vclIsLoading, refetch : vclRefetch } = useFetchVclNo(selectedDate, selectedVclNo);
   if (isLoading) return <p>Loading...</p>;
+  if (vclIsLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
-
-  // Add fetched data to Redux store only if it's the first time (firstAdd is true)
   if (firstAdd) {
     dispatch(addData(data));
   }
 
-  // Handle date selection from calendar
+
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
     setIsPopoverOpen(false);
-
-    // Refetch data from backend based on selected date
-    await refetch(newDate);
+    refetch();
+    vclRefetch();
+  console.log(data)
   };
-
-  // // Filter tableData based on selectedDate
-  // const filteredTableData = tableData.filter((item) => {
-  //   // Convert item.date to Date object for comparison
-  //   const itemDate = new Date(item.date);
-  //   // Compare if the itemDate is the same day as selectedDate
-  //   return isSameDay(itemDate, selectedDate);
-  // });
-  // Handle vclNo selection from dropdown
   const handleVclNoSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedVclNo(event.target.value);
+    refetch();
+    vclRefetch();
   };
-  // Filter tableData based on selectedDate and selectedVclNo
+
   const filteredTableData = tableData.filter((item) => {
     const itemDate = new Date(item.date);
     const isDateMatch = isSameDay(itemDate, selectedDate);
@@ -103,8 +93,9 @@ const GetDataPage = () => {
       >
         <option value="">Select VclNo</option>
         {/* Add your vclNo options here */}
-        <option value="VCL1">VCL1</option>
-        <option value="VCL2">VCL2</option>
+        {vclData.map((vcl) => (
+        <option value={vcl.vclNo}>{vcl.vclNo}</option>
+        ))}
         {/* Add more options as needed */}
       </select>
 

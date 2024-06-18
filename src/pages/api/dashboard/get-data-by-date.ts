@@ -14,9 +14,22 @@ export default async function handler(
     });
     return res.status(200).json(data);
   } else if (req.method === "POST") {
-    const date = req.body.date
-    console.log(date)
-    const data = await prisma.formData.findMany();
+    const date = new Date(req.body.date);
+    const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+    const vclNo = req.body.vclNo;
+    const data = await prisma.formData.findMany(
+      {
+        where: {
+          date: {
+            gte: startOfDay,
+            lte: endOfDay
+          },
+        }
+      }
+    );
+    console.log(date, "date is date")
+    console.log(data, "data by Date")
     return res.status(200).json(data);
   } else {
     res.setHeader("Allow", ["GET", "POST"]);

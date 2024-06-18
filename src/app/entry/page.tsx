@@ -26,7 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { submitFormData, useFetchListOfNames } from "./data/query";
 import { useAppDispatch, useAppSelector } from "./data/hooks";
 import { resetEntry, updateEntry } from "./data/entrySlice";
@@ -38,6 +38,7 @@ const Entry = () => {
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const weights = useAppSelector((state) => state.weightReducer)
+  const formRef = useRef(null);
   const dispatch = useAppDispatch();
   const [date, setDate] = React.useState<Date>();
   const setNewDate = (e: Date, fieldName: formName) => {
@@ -48,6 +49,8 @@ const Entry = () => {
   const formSubmit = async (e) => {
     e.preventDefault();
     const data = { ...entryData, ...weights }
+    console.log(data, ' data')
+    console.log(entryData, weights)
     const response = await submitFormData(data)
     if (!response.success) {
       toast.error("error while submitting form")
@@ -64,13 +67,12 @@ const Entry = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
         event.altKey &&
-        event.key === 's'
+        event.key === 'h'
       ) {
-        event.preventDefault(); // Prevent the default action for the key combination
+        console.log('hello')
         formSubmit(event);
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
@@ -120,7 +122,7 @@ const Entry = () => {
 
   return (
     <>
-      <form onSubmit={formSubmit} className="flex flex-wrap p-12 gap-10 w-[1000px] m-auto justify-center" >
+      <form ref={formRef} onSubmit={formSubmit} className="flex flex-wrap p-12 gap-10 w-[1000px] m-auto justify-center" >
         {formData.map(
           (field) =>
             field.fieldType === fieldType.input ? (

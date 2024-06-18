@@ -1,5 +1,17 @@
-import { z } from "zod";
-import { formSchema } from "./formSchema";
+export enum formName {
+  serialNo = 'serialNo',
+  supplierName = 'supplierName',
+  farmerName = 'farmerName',
+  itemName = 'itemName',
+  nug = 'nug',
+  customerName = 'customerName',
+  typeItem = 'typeItem',
+  date = 'date',
+  vclNo = 'vclNo',
+  freightRate = 'freightRate',
+  otherCharge = 'otherCharge',
+  labourRate = 'labourRate',
+}
 
 export enum fieldType {
   input = 'input',
@@ -12,7 +24,7 @@ export enum fieldType {
 
 interface FormDataItem {
   fieldType: fieldType;
-  name: keyof z.infer<typeof formSchema>;
+  name: formName;
   className?: string;
   type: string;
   placeholder: string;
@@ -25,88 +37,93 @@ type formDataType = FormDataItem[];
 export const formData: formDataType = [
   {
     fieldType: fieldType.input,
-    name: 'serialNo',
-    className: 'w-40',
+    name: formName.serialNo,
+    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter serialNo',
     autofocus: true
   },
   {
     fieldType: fieldType.commandInput,
-    name: 'supplierName',
-    className: 'w-40',
+    name: formName.supplierName,
+    // className: 'w-40',
     type: 'text',
     placeholder: 'Enter supplierName',
   },
   {
     fieldType: fieldType.commandInput,
-    name: 'farmerName',
-    className: 'w-40',
+    name: formName.farmerName,
+    // className: 'w-40',
     type: 'text',
     placeholder: 'Enter farmerName',
   },
   {
-    fieldType: fieldType.commandInput,
-    name: 'itemName',
-    className: 'w-40',
+    fieldType: fieldType.selectInput,
+    name: formName.typeItem,
+    // className: 'w-40',
     type: 'text',
-    placeholder: 'Enter itemName',
+    placeholder: 'Enter typeItem',
   },
   {
     fieldType: fieldType.input,
-    name: 'nug',
-    className: 'w-40',
+    name: formName.nug,
+    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter nug',
   },
   {
     fieldType: fieldType.commandInput,
-    name: 'customerName',
-    className: 'w-40',
+    name: formName.customerName,
+    // className: 'w-40',
     type: 'text',
     placeholder: 'Enter customerName',
   },
   {
-    fieldType: fieldType.selectInput,
-    name: 'typeItem',
-    className: 'w-40',
+    fieldType: fieldType.weightInput,
+    name: formName.serialNo,
+    type: 'number',
+    placeholder: 'Enter serialNo',
+  },
+  {
+    fieldType: fieldType.commandInput,
+    name: formName.itemName,
+    // className: 'w-40',
     type: 'text',
-    placeholder: 'Enter typeItem',
+    placeholder: 'Enter itemName',
   },
   {
     fieldType: fieldType.datePicker,
-    name: 'date',
-    className: 'w-40',
+    name: formName.date,
+    // className: 'w-40',
     type: 'date',
     placeholder: 'Enter date',
   },
   {
     fieldType: fieldType.commandInput,
-    name: 'vclNo',
-    className: 'w-40',
+    name: formName.vclNo,
+    // className: 'w-40',
     type: 'text',
     placeholder: 'Enter vclNo',
   },
   {
     fieldType: fieldType.input,
-    name: 'freightRate',
-    className: 'w-40',
+    name: formName.freightRate,
+    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter freightRate',
   },
   {
     fieldType: fieldType.input,
-    name: 'otherCharge',
-    className: 'w-40',
+    name: formName.otherCharge,
+    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter otherCharge',
   },
   {
     fieldType: fieldType.input,
-    name: 'labourRate',
-    className: 'w-40',
+    name: formName.labourRate,
+    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter labourRate',
   },
-  
 ]

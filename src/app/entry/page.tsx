@@ -1,21 +1,8 @@
 "use client";
-
-import {
-  Form,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { formObject, formSchema } from "./form/formSchema";
-import { fieldType, formData } from "./form/formData";
+import { fieldType, formData, formName } from "./form/formData";
 import { Input } from "@/components/ui/input";
 import {
   Command,
-  CommandDialog,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -39,39 +26,90 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useState } from "react";
-import { useFetchListOfNames } from "./data/query";
+import React, { useEffect, useState } from "react";
+import { submitFormData, useFetchListOfNames } from "./data/query";
 import { useAppDispatch, useAppSelector } from "./data/hooks";
-import { updateEntry } from "./data/entrySlice";
+import { resetEntry, updateEntry } from "./data/entrySlice";
+import { Label } from "@/components/ui/label";
+import { addWeight, resetWeight, updataWeight } from "./data/weightSlice";
+import { toast } from "sonner";
 
 const Entry = () => {
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
-  const [open, setOpen] = useState(false)
+  const weights = useAppSelector((state) => state.weightReducer)
   const dispatch = useAppDispatch();
   const [date, setDate] = React.useState<Date>();
+  const setNewDate = (e: Date, fieldName: formName) => {
+    setDate(e)
+    dispatch(updateEntry({ name: fieldName, value: e.toString() }))
+  }
+
+  const formSubmit = async (e) => {
+    e.preventDefault();
+    const data = { ...entryData, ...weights }
+    const response = await submitFormData(data)
+    if (!response.success) {
+      toast.error("error while submitting form")
+    }
+    if (response.success) {
+      toast.success('your form success submitted')
+    }
+    dispatch(resetEntry())
+    dispatch(resetWeight())
+    return
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.altKey &&
+        event.key === 's'
+      ) {
+        event.preventDefault(); // Prevent the default action for the key combination
+        formSubmit(event);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   const [isFocused, setIsFocused] = useState({
     supplierName: false,
     farmerName: false,
     customerName: false,
     itemName: false,
-    vclNo: false
+    vclNo: false,
+    serialNo: false,
+    nug: false,
+    typeItem: false,
+    date: false,
+    freightRate: false,
+    otherCharge: false,
+    labourRate: false,
   });
 
-  const handleFocus = (name) => {
+  const handleFocus = (name: string) => {
     setIsFocused((prevState) => ({
       ...prevState,
       [name]: true
     }));
   };
 
-  const handleBlur = (name) => {
+  const handleAddWeight = (e) => {
+    e.preventDefault();
+    dispatch(addWeight());
+  }
+
+  const handleBlur = (name: string) => {
     setIsFocused((prevState) => ({
       ...prevState,
       [name]: false
     }));
   };
-  const form = useForm<z.infer<typeof formSchema>>(formObject);
   const { data, isError, isLoading, refetch } = useFetchListOfNames();
   if (isLoading) {
     return <div>Loading...</div>;
@@ -82,31 +120,32 @@ const Entry = () => {
 
   return (
     <>
-      <Form {...form}>
-        <form className="flex flex-wrap" onSubmit={form.handleSubmit((data) => console.log(data))}>
-          {formData.map(
-            (field) =>
-              field.fieldType === fieldType.input ? (
-                <FormField
-                  key={field.name}
-                  control={form.control}
-                  name={field.name}
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>{field.name}</FormLabel>
-                      <Input
-                        type={field.type}
-                        className={`${field.className} mt-40 `}
-                        placeholder={field.placeholder}
-                        autoFocus={field.autofocus}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : field.fieldType === fieldType.commandInput ? (
+      <form onSubmit={formSubmit} className="flex flex-wrap p-12 gap-10 w-[1000px] m-auto justify-center" >
+        {formData.map(
+          (field) =>
+            field.fieldType === fieldType.input ? (
+              <>
+                <div className="flex flex-col gap-1">
+                  <Label>{field.name}</Label>
+                  <Input
+                    key={field.name}
+                    name={field.name}
+                    type={field.type}
+                    className={`w-64 ${field.className}`}
+                    min={0}
+                    placeholder={field.placeholder}
+                    autoFocus={field.autofocus}
+                    value={entryData[field.name]}
+                    onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
+                    required
+                  />
+                </div>
+              </>
+            ) : field.fieldType === fieldType.commandInput ? (
+              <div className="flex flex-col gap-1">
+                <Label>{field.name}</Label>
                 <Command
-                  className="rounded-lg border shadow-md w-40 relative"
+                  className="rounded-lg border shadow-md w-64 relative overflow-visible"
                 >
                   <CommandInput
                     placeholder="Type a command or search..."
@@ -124,9 +163,9 @@ const Entry = () => {
                       )
                     }
                   />
-                  <CommandList className={`${isFocused[field.name] ? '' : 'hidden'} absolute `} >
+                  <CommandList className={`${isFocused[field.name] ? '' : 'hidden'} absolute w-full top-10 z-10 bg-white shadow-lg border`} >
                     <CommandGroup  >
-                      {data?.[field.name].slice(0, 2).map((name, index) => (
+                      {data?.[field.name].slice(0, 5).map((name: string, index: number) => (
                         <CommandItem
                           key={index}
                           onSelect={(e) => {
@@ -139,76 +178,82 @@ const Entry = () => {
                     </CommandGroup>
                   </CommandList>
                 </Command>
-              ) : field.fieldType === fieldType.selectInput ? (
-                <FormField
+              </div>
+            ) : field.fieldType === fieldType.selectInput ? (
+              <div className="flex flex-col gap-1">
+                <Label>{field.name}</Label>
+                <Select
+                  onValueChange={(value) =>
+                    dispatch(updateEntry({ name: field.name, value: value }))
+                  }
                   key={field.name}
-                  control={form.control}
                   name={field.name}
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>{field.name}</FormLabel>
-                      <Select
-                        onValueChange={(value) => console.log(value)}
-                        defaultValue="a"
-                      >
-                        <SelectTrigger className="w-40">
-                          <SelectValue placeholder="Select an option" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="a">Option A</SelectItem>
-                          <SelectItem value="b">Option B</SelectItem>
-                          <SelectItem value="c">Option C</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>{field.description}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : field.fieldType === fieldType.datePicker ? (
-                <FormField
-                  key={field.name}
-                  control={form.control}
-                  name={field.name}
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>{field.name}</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[280px] justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? (
-                              format(date, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormDescription>{field.description}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : null
-          )}
-        </form>
+                  defaultValue="peti"
+                >
+                  <SelectTrigger className="w-64">
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="peti">Peti</SelectItem>
+                    <SelectItem value="daba">Daba</SelectItem>
+                    <SelectItem value="box">Box</SelectItem>
+                    <SelectItem value="plate">Plate</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : field.fieldType === fieldType.datePicker ? (
+              <div className="flex flex-col gap-1">
+                <Label>{field.name}</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[280px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? (
+                        format(date, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(e) => { e && setNewDate(e, field.name) }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ) : field.fieldType === fieldType.weightInput ? (
+              <div className='w-full flex gap-4 justify-center' >
+                <Button onClick={handleAddWeight} >Add Weigth</Button>
+                <div className="w-[750px] flex flex-wrap gap-4 justify-center">
+                  {weight.map((w: string, index: number) => (
+                    <>
+                      <Input
+                        className="w-14"
+                        key={index}
+                        value={weight[index]}
+                        type="number"
+                        min={0}
+                        onChange={(e) => dispatch(updataWeight({ index: index, value: e.target.value }))}
+                      />
+                    </>
+                  ))
+                  }
+                </div>
+              </div>
+            ) : null
+        )}
         <Button type="submit">Save</Button>
-      </Form >
+      </form>
     </>
   );
 };

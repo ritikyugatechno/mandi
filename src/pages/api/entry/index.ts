@@ -13,9 +13,26 @@ export default async function handler(
   }
   else if (req.method === "POST") {
     const data = req.body;
-    console.log(data)
-    // const newFormData = await prisma.formData.create({ data: data });
-    return res.status(200);
+    await prisma.formData.create(
+      {
+        data: {
+          serialNo : parseInt(data.serialNo),
+          supplierName: data.supplierName,
+          farmerName: data.farmerName,
+          cNug: parseInt(data.nug),
+          sNug: parseInt(data.nug),
+          customerName: data.customerName,
+          itemName: data.itemName,
+          typeItem: data.typeItem,
+          date: new Date(data.date),
+          vclNo: data.vclNo,
+          freightRate: parseFloat(data.freightRate),
+          otherCharge: parseFloat(data.otherCharge),
+          labourRate: parseFloat(data.labourRate),
+        }
+      }
+    )
+    return res.status(200).json({ success: true });
   }
   else {
     res.setHeader("Allow", ["GET", "POST"]);

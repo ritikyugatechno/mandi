@@ -11,7 +11,7 @@ export const weightSlice = createSlice({
     addWeight: (state) => {
       state.weight.push('0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
     },
-    removeWeight: (state) => {
+    resetWeight: (state) => {
       state.weight = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'];
     },
     updataWeight: (state, action) => {
@@ -22,6 +22,6 @@ export const weightSlice = createSlice({
   }
 })
 
-export const { addWeight, removeWeight, updataWeight } = weightSlice.actions
+export const { addWeight, resetWeight, updataWeight } = weightSlice.actions
 
 export default weightSlice.reducer

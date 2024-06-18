@@ -8,6 +8,8 @@ const fetchListOfNames = async () => {
   return response;
 };
 
+export const submitFormData = async (data) => await api(methods.post, "/api/entry",data);
+
 export const useFetchListOfNames = () => {
   return useQuery({
     queryKey: ["fetchlistofnames"],

@@ -12,17 +12,21 @@ datasource db {
 
 model FormData {
   id    Int     @id @default(autoincrement())
-  serialNo  Int 
-  supplierName  String
-  farmerName  String
-  typeItem String 
-  cNug Int
-  sNug Int
-  customerName String
-  itemName String
-  date DateTime
-  vclNo String
-  freightRate Float
-  otherCharge Float
-  labourRate  Float 
+  serialNo  Int?
+  supplierName  String?
+  farmerName  String?
+  lot String?
+  typeItem String?
+  cut Int?
+  cNug Int?
+  sNug Int?
+  customerName String?
+  supplierRate Int?
+  customerRate Int?
+  itemName String?
+  date DateTime?
+  vclNo String?
+  freightRate Float?
+  otherCharge Float?
+  labourRate  Float?
 }

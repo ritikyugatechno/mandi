@@ -95,7 +95,7 @@ const Entry = () => {
   const handleFocus = (name: string) => {
     setIsFocused((prevState) => ({
       ...prevState,
-      [name]: true
+      [name]: true,
     }));
   };
 
@@ -107,7 +107,7 @@ const Entry = () => {
   const handleBlur = (name: string) => {
     setIsFocused((prevState) => ({
       ...prevState,
-      [name]: false
+      [name]: false,
     }));
   };
   const { data, isError, isLoading, refetch } = useFetchListOfNames();

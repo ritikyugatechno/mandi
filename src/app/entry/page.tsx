@@ -38,7 +38,7 @@ const Entry = () => {
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const weights = useAppSelector((state) => state.weightReducer)
-  const formRef = useRef(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const dispatch = useAppDispatch();
   const [date, setDate] = React.useState<Date>();
   const setNewDate = (e: Date, fieldName: formName) => {
@@ -46,11 +46,9 @@ const Entry = () => {
     dispatch(updateEntry({ name: fieldName, value: e.toString() }))
   }
 
-  const formSubmit = async (e) => {
+  const formSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const data = { ...entryData, ...weights }
-    console.log(data, ' data')
-    console.log(entryData, weights)
     const response = await submitFormData(data)
     if (!response.success) {
       toast.error("error while submitting form")
@@ -65,12 +63,14 @@ const Entry = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      event.preventDefault();
       if (
         event.altKey &&
-        event.key === 'h'
+        event.key === 's'
       ) {
-        console.log('hello')
-        formSubmit(event);
+        if(formRef.current){
+          formRef.current.submit();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -101,7 +101,7 @@ const Entry = () => {
     }));
   };
 
-  const handleAddWeight = (e) => {
+  const handleAddWeight = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     dispatch(addWeight());
   }

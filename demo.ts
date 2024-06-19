@@ -47,3 +47,7 @@ let nameCounts = names.reduce((accumulator, currentValue) => {
 }, {});
 
 // Output: { Alice: 2, Bob: 1, Tiff: 1, Bruce: 1 }
+
+
+
+const nameR = [{arun:[]},{dinesh:[]}]

@@ -16,22 +16,23 @@ import { RootState } from "./store";
 import { DataTable } from "./data-table";
 import { columns } from "./column";
 import { cn } from "@/lib/utils";
-import useKeyboardShortcut from "./useKeyboardShortcut";
+import useKeyboardShortcut from "../useKeyboardShortcut";
 
 const GetDataPage = () => {
   useKeyboardShortcut("Alt+1", "/entry");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedVclNo, setSelectedVclNo] = useState<string>('');
+  // const [vclList, setVclList] = useState([]);
 
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.datas);
   const firstAdd = useSelector((state: RootState) => state.firstAdd);
 
-  const { data, isLoading, isError, refetch } = useFetchSale(selectedDate, selectedVclNo);
-  const {data : vclData,isLoading: vclIsLoading, refetch : vclRefetch } = useFetchVclNo(selectedDate, selectedVclNo);
+  const { data, isLoading, isError} = useFetchSale(selectedDate, selectedVclNo);
+  // const {data : vclData,isLoading: vclIsLoading } = useFetchVclNo(selectedDate, selectedVclNo);
   if (isLoading) return <p>Loading...</p>;
-  if (vclIsLoading) return <p>Loading...</p>;
+  // if (vclIsLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
   if (firstAdd) {
     dispatch(addData(data));
@@ -41,22 +42,30 @@ const GetDataPage = () => {
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
     setIsPopoverOpen(false);
-    refetch();
-    vclRefetch();
-  console.log(data)
   };
   const handleVclNoSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedVclNo(event.target.value);
-    refetch();
-    vclRefetch();
   };
 
-  const filteredTableData = tableData.filter((item) => {
+  const vclList = []
+
+  const filteredTableData = tableData.filter((item: { date: string | number | Date; vclNo: string; }) => {
     const itemDate = new Date(item.date);
-    const isDateMatch = isSameDay(itemDate, selectedDate);
-    const isVclNoMatch = selectedVclNo ? item.vclNo === selectedVclNo : true;
-    return isDateMatch && isVclNoMatch;
+    let isDateMatch = isSameDay(itemDate, selectedDate);
+    if(isDateMatch ){
+      vclList.push(item.vclNo)
+    }
+    let isVclNoMatch = item.vclNo === selectedVclNo ? true: false;
+    if(selectedVclNo === "all"){
+      isDateMatch = true;
+      isVclNoMatch = true;
+    }
+    if(isDateMatch && isVclNoMatch){
+      return item
+    }
   });
+  
+  const uniqueVlcNo = [...new Set(vclList)]
 
   return (
     <div className="container mx-auto py-10">
@@ -92,9 +101,10 @@ const GetDataPage = () => {
         className="border rounded p-2"
       >
         <option value="">Select VclNo</option>
+        <option value="all">All</option>
         {/* Add your vclNo options here */}
-        {vclData.map((vcl) => (
-        <option value={vcl.vclNo}>{vcl.vclNo}</option>
+        {uniqueVlcNo.map((data) => (
+        <option value={data}>{data}</option>
         ))}
         {/* Add more options as needed */}
       </select>

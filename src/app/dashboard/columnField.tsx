@@ -12,7 +12,7 @@ import { Popover, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { KeyboardEvent, KeyboardEvent, AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 import { useFetchSale } from "./query";
@@ -24,27 +24,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 let keysPressed = {};
-const handleKeyUp = (e) => {
+const ColumnArray = ["serialNo", "supplierName", "farmerName", "itemName", "cnug", "customerName", "typeItem", "vclNo", "freightRate", "otherCharge", "labourRate", "weight", "avgWeight", "sellerRate", "customerRate", "sNug", "netWeight", "grossWeight", "cut", "date",]
+
+const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
   keysPressed[e.key] = false;
 };
-const handleKeyDown = (e, row, column) => {
+const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLButtonElement>, row: { index: number; }, column: { id: any; }) => {
   keysPressed[e.key] = true;
-  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+  if (e.key === "ArrowDown" ) {
     e.preventDefault();
-    const currentElement = e.target;
-    const allElements = document.querySelectorAll("[role='combobox']");
-    const currentIndex = Array.from(allElements).indexOf(currentElement);
-    let nextElement;
-    if (e.key === "ArrowRight") {
-      nextElement = allElements[currentIndex + 1];
-    } else if (e.key === "ArrowLeft") {
-      nextElement = allElements[currentIndex - 1];
+    const Element = document.querySelector(
+      `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`
+    ) ;
+    if (Element) {
+      Element.focus();
     }
-    if (nextElement) {
-      nextElement.focus();
+  } else if (e.key === "ArrowUp"){
+    e.preventDefault();
+    const Element = document.querySelector(
+      `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
+    );
+    if (Element) {
+      Element.focus();
     }
-    // setOpen(true);
-  } else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+  }
+  else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
     e.preventDefault();
     const currentElement = e.target;
     const allElements = document.querySelectorAll("[role='combobox']");
@@ -59,13 +63,6 @@ const handleKeyDown = (e, row, column) => {
       nextElement.focus();
     }
   } else if (keysPressed["Shift"] && keysPressed["Enter"]) {
-    e.preventDefault();
-    const Element = document.querySelector(
-      `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
-    );
-    if (Element) {
-      Element.focus();
-    }
   } else if (e.key === "Enter") {
     e.preventDefault();
     const Element = document.querySelector(
@@ -77,7 +74,7 @@ const handleKeyDown = (e, row, column) => {
   }
 };
 
-const onChangeHandle = (e) => {
+const onChangeHandle = (e: { target: { value: any; }; }) => {
   const newArray = {
     row: row.index,
     column: column.id,
@@ -91,6 +88,7 @@ export const InputColumnField = ({ row, column }) => {
     <>
       <div>
         <Input
+          defaultValue={row.getValue(column.id)}
           data-row-index={row.index}
           data-column-name={column.id}
           onKeyUp={(e) => handleKeyUp(e)}
@@ -123,8 +121,8 @@ export const ComboboxColumnField = ({ row, column, cell }) => {
             className="w-[200px] justify-between"
             onKeyDown={(e) => handleKeyDown(e, row, column, cell)}
           >
-            {value
-              ? data.find((dataValue) => dataValue.value === value)?.label
+            {value !== ''
+              ? value
               : "Select dataValue..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -139,7 +137,7 @@ export const ComboboxColumnField = ({ row, column, cell }) => {
             <CommandList>
               <CommandEmpty>No framework found.</CommandEmpty>
               <CommandGroup>
-                {data.map((dataValue) => (
+                {data.map((dataValue: { value: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                   <CommandItem
                     key={dataValue.value}
                     onSelect={() => {
@@ -167,6 +165,8 @@ export const ComboboxColumnField = ({ row, column, cell }) => {
 };
 
 export const SelectColumnField = ({ row, column }) => {
+  const datas = useSelector((state: RootState) => state.datas);
+  const thisValue = datas[row.index][column.id];
   return (
     <Select>
       <SelectTrigger className="w-64">

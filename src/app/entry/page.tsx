@@ -33,8 +33,11 @@ import { resetEntry, updateEntry } from "./data/entrySlice";
 import { Label } from "@/components/ui/label";
 import { addWeight, resetWeight, updataWeight } from "./data/weightSlice";
 import { toast } from "sonner";
+import useKeyboardShortcut from "../useKeyboardShortcut";
+import { formSubmit } from "./form/formSubmit";
 
 const Entry = () => {
+  useKeyboardShortcut('Alt+2', '/dashboard');
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const weights = useAppSelector((state) => state.weightReducer)
@@ -46,30 +49,25 @@ const Entry = () => {
     dispatch(updateEntry({ name: fieldName, value: e.toString() }))
   }
 
-  const formSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    const data = { ...entryData, ...weights }
-    const response = await submitFormData(data)
-    if (!response.success) {
-      toast.error("error while submitting form")
+
+  const doNothingEnter = (e: { key: string; preventDefault: () => void; }) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
     }
-    if (response.success) {
-      toast.success('your form success submitted')
-    }
-    dispatch(resetEntry())
-    dispatch(resetWeight())
-    return
   }
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      event.preventDefault();
       if (
         event.altKey &&
         event.key === 's'
       ) {
-        if(formRef.current){
-          formRef.current.submit();
+        if (formRef.current) {
+          event.preventDefault();
+          console.log('hi ');
+          console.log(formRef)
+          // formRef.current.submit();
+          formSubmit(event, false);
         }
       }
     };
@@ -130,6 +128,7 @@ const Entry = () => {
                 <div className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   <Input
+                    onKeyDown={doNothingEnter}
                     key={field.name}
                     name={field.name}
                     type={field.type}
@@ -240,6 +239,7 @@ const Entry = () => {
                   {weight.map((w: string, index: number) => (
                     <>
                       <Input
+                        onKeyDown={doNothingEnter}
                         className="w-14"
                         key={index}
                         value={weight[index]}

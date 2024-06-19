@@ -11,7 +11,7 @@ export default async function handler(
     const data = await prisma.formData.findMany({
         
     });
-    console.log(data);
+    return res.status(200).json(data)
   }
 
   return res.status(200).json({ success: true });

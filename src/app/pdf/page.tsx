@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { useFetchPdf } from "./query";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -34,39 +35,19 @@ const styles = StyleSheet.create({
 
 // Create Document Component
 const PdfDocument = () => {
-  const [showData, setShowData] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/dashboard/get-data-by-date")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("useEffect", data);
-        setShowData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+  const [data, isLoading, isError, refetch] = useFetchPdf();
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {isError} </p>;
+  // const showData = data.data;
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           {/* <Text style={styles.heading}>Supplier Names</Text> */}
-          {showData.map((data, index) => (
-            <Text key={index} style={styles.text}>
-              {data.supplierName[0]}
-            </Text>
-          ))}
+          
         </View>
-        <View style={styles.section}>
-          {/* <Text style={styles.heading}>Farmer Names</Text> */}
-          {showData.map((data, index) => (
-            <Text key={index} style={styles.text}>
-              {data.farmerName[0]}
-            </Text>
-          ))}
-        </View>
+        <View style={styles.section}></View>
       </Page>
     </Document>
   );

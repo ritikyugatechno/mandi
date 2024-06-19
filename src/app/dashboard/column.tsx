@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ComboboxColumnField, InputColumnField } from "./columnField";
+import { ComboboxColumnField, InputColumnField, SelectColumnField } from "./columnField";
 
 export type saleData = {
   id: number;
@@ -62,7 +62,7 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "typeItem",
     header: "Type Item",
-    cell: InputColumnField,
+    cell: SelectColumnField,
   },
   {
     accessorKey: "vclNo",

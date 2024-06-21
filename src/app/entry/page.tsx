@@ -33,11 +33,9 @@ import { resetEntry, updateEntry } from "./data/entrySlice";
 import { Label } from "@/components/ui/label";
 import { addWeight, resetWeight, updataWeight } from "./data/weightSlice";
 import { toast } from "sonner";
-import useKeyboardShortcut from "../useKeyboardShortcut";
 import { formSubmit } from "./form/formSubmit";
 
 const Entry = () => {
-  useKeyboardShortcut('Alt+2', '/dashboard');
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const weights = useAppSelector((state) => state.weightReducer)
@@ -127,6 +125,9 @@ const Entry = () => {
               <>
                 <div className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
+                  {field.autofocus
+                  ?(
+
                   <Input
                     onKeyDown={doNothingEnter}
                     key={field.name}
@@ -135,11 +136,26 @@ const Entry = () => {
                     className={`w-64 ${field.className}`}
                     min={0}
                     placeholder={field.placeholder}
-                    autoFocus={field.autofocus}
+                    value={entryData[field.name]}
+                    onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
+                    required
+                    data-autofocus='true'
+                  />
+                  ):(
+                  <Input
+                    onKeyDown={doNothingEnter}
+                    key={field.name}
+                    name={field.name}
+                    type={field.type}
+                    className={`w-64 ${field.className}`}
+                    min={0}
+                    placeholder={field.placeholder}
                     value={entryData[field.name]}
                     onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
                     required
                   />
+                  )
+                }
                 </div>
               </>
             ) : field.fieldType === fieldType.commandInput ? (
@@ -166,7 +182,7 @@ const Entry = () => {
                   />
                   <CommandList className={`${isFocused[field.name] ? '' : 'hidden'} absolute w-full top-10 z-10 bg-white shadow-lg border`} >
                     <CommandGroup  >
-                      {data?.[field.name].slice(0, 5).map((name: string, index: number) => (
+                      {data?.[field.name]?.slice(0, 5)?.map((name: string, index: number) => (
                         <CommandItem
                           key={index}
                           onSelect={(e) => {
@@ -251,6 +267,25 @@ const Entry = () => {
                   ))
                   }
                 </div>
+              </div>
+            ) : field.fieldType === fieldType.selectInputKg ? (
+              <div className="flex flex-col gap-1">
+                <Label>{field.name}</Label>
+                <Select
+                  onValueChange={(value) =>
+                    dispatch(updateEntry({ name: field.name, value: value }))
+                  }
+                  key={field.name}
+                  name={field.name}
+                >
+                  <SelectTrigger className="w-64">
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Kg</SelectItem>
+                    <SelectItem value="false">Nug</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             ) : null
         )}

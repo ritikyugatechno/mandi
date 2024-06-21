@@ -6,6 +6,7 @@ const initialState = {
   supplierName: '',
   farmerName: '',
   customerName: '',
+  lot: '',
   itemName: '',
   vclNo: '',
   serialNo: '',
@@ -13,8 +14,10 @@ const initialState = {
   typeItem: '',
   date: '',
   freightRate: '',
+  freightKg: '',
   otherCharge: '',
   labourRate: '',
+  labourKg: '',
 }
 export const entrySlice = createSlice({
   name: 'data',

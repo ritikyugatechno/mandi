@@ -17,7 +17,7 @@ model FormData {
   farmerName  String?
   lot String?
   typeItem String?
-  cut Int?
+  cut Float?
   cNug Int?
   sNug Int?
   customerName String?
@@ -27,6 +27,17 @@ model FormData {
   date DateTime?
   vclNo String?
   freightRate Float?
+  freightKg Boolean?
+  freightTotal Float?
   otherCharge Float?
+  otherChargeTotal Float?
   labourRate  Float?
+  labourKg Boolean?
+  labourTotal Float?
+  basicAmount Float?
+  bikariAmount Float?
+  avgWeight Float?
+  grossWeight Float?
+  netWeight Float?
+  weight String?
 }

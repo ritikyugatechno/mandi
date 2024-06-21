@@ -1,43 +1,36 @@
-"use client";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { format, isSameDay } from "date-fns"; // Import isSameDay for date comparison
-import { Calendar as CalendarIcon } from "lucide-react";
+'use client'
+import React, { useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import SupplierName from './supplierName';
+import { useFetchPdf } from './query';
+import { format, isSameDay } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useFetchSale, useFetchVclNo } from "./query";
-import { addData } from "./dataSlice";
-import { RootState } from "./store";
-import { DataTable } from "./data-table";
-import { columns } from "./column";
-import { cn } from "@/lib/utils";
-import { addNewData } from "./filterDataSlice";
-import { formSubmit } from "./formSubmit";
+import { cn } from '@/lib/utils';
 
-const GetDataPage = () => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+export const Print1: React.FC = () => {
+  const contentToPrint = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedVclNo, setSelectedVclNo] = useState<string>('');
-  // const [vclList, setVclList] = useState([]);
-
-  const dispatch = useDispatch();
-  const tableData = useSelector((state: RootState) => state.dataReducer.datas);
-  const firstAdd = useSelector((state: RootState) => state.dataReducer.firstAdd);
-
-  const { data, isLoading, isError} = useFetchSale(selectedDate, selectedVclNo);
-  // const {data : vclData,isLoading: vclIsLoading } = useFetchVclNo(selectedDate, selectedVclNo);
+  const handlePrint = useReactToPrint({
+    content: () => contentToPrint.current,
+    documentTitle: "Print This Document",
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+    removeAfterPrint: true,
+  });
+  const { data, isLoading, isError, refetch } = useFetchPdf();
   if (isLoading) return <p>Loading...</p>;
-  // if (vclIsLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
-  if (firstAdd) {
-    dispatch(addData(data));
-  }
 
+  const vclList = []
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -46,11 +39,7 @@ const GetDataPage = () => {
   const handleVclNoSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedVclNo(event.target.value);
   };
-
-  const vclList = []
-  let filtered = false;
-
-  const filteredTableData = tableData.filter((item: { date: string | number | Date; vclNo: string; }) => {
+  const filteredTableData = data.filter((item: { date: string | number | Date; vclNo: string; }) => {
     const itemDate = new Date(item.date);
     let isDateMatch = isSameDay(itemDate, selectedDate);
     if(isDateMatch ){
@@ -62,20 +51,14 @@ const GetDataPage = () => {
       isVclNoMatch = true;
     }
     if(isDateMatch && isVclNoMatch){
-      filtered = true;
       return item
     }
   });
-  if(filtered){
-  dispatch(addNewData(filteredTableData));
-  }
   
   const uniqueVlcNo = [...new Set(vclList)]
-
   return (
-    <div className="container mx-auto py-10">
-      <div className=" flex w-full">
-
+    <>
+      <div className='flex'>
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -115,11 +98,15 @@ const GetDataPage = () => {
         ))}
         {/* Add more options as needed */}
       </select>
-      <Button className="ml-auto" onClick={formSubmit}>Save</Button>
+      <Button className='ml-auto mr-10' onClick={handlePrint}>
+        PRINT
+      </Button>
       </div>
-      <DataTable columns={columns} data={filteredTableData} />
-    </div>
+      <div ref={contentToPrint}>
+        <SupplierName data={filteredTableData} />
+      </div>
+    </>
   );
 };
 
-export default GetDataPage;
+export default Print1;

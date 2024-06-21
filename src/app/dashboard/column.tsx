@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ComboboxColumnField, InputColumnField, SelectColumnField } from "./columnField";
+import { ComboboxColumnField, DateColumnField, DeleteColumnField, InputColumnField, SelectColumnField } from "./columnField";
 
 export type saleData = {
   id: number;
@@ -34,6 +34,11 @@ export const columns: ColumnDef<saleData>[] = [
     cell: InputColumnField,
   },
   {
+    accessorKey: "vclNo",
+    header: "VCL No",
+    cell: ComboboxColumnField,
+  },
+  {
     accessorKey: "supplierName",
     header: "Supplier Name",
     cell: ComboboxColumnField,
@@ -44,49 +49,13 @@ export const columns: ColumnDef<saleData>[] = [
     cell: ComboboxColumnField,
   },
   {
-    accessorKey: "itemName",
-    header: "Item Name",
-    cell: ComboboxColumnField,
-  },
-  {
-    accessorKey: "cnug",
-    header: "C.Nug",
-    cell: InputColumnField,
-
-  },
-  {
-    accessorKey: "customerName",
-    header: "Customer Name",
-    cell: ComboboxColumnField,
-  },
-  {
     accessorKey: "typeItem",
     header: "Type Item",
     cell: SelectColumnField,
   },
   {
-    accessorKey: "vclNo",
-    header: "VCL No",
-    cell: ComboboxColumnField,
-  },
-  {
-    accessorKey: "freightRate",
-    header: "Freight Rate",
-    cell: InputColumnField,
-  },
-  {
-    accessorKey: "otherCharge",
-    header: "Other Charge",
-    cell: InputColumnField,
-  },
-  {
-    accessorKey: "labourRate",
-    header: "Labour Rate",
-    cell: InputColumnField,
-  },
-  {
-    accessorKey: "weight",
-    header: "Weight",
+    accessorKey: "sNug",
+    header: "S.Nug",
     cell: InputColumnField,
   },
   {
@@ -95,18 +64,35 @@ export const columns: ColumnDef<saleData>[] = [
     cell: InputColumnField,
   },
   {
-    accessorKey: "sellerRate",
+    accessorKey: "supplierRate",
     header: "Seller Rate",
-    cell: InputColumnField,
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
   },
   {
     accessorKey: "customerRate",
     header: "Customer Rate",
-    cell: InputColumnField,
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
   },
   {
-    accessorKey: "sNug",
-    header: "S.Nug",
+    accessorKey: "customerName",
+    header: "Customer Name",
+    cell: ComboboxColumnField,
+  },
+  {
+    accessorKey: "cNug",
+    header: "C.Nug",
     cell: InputColumnField,
   },
   {
@@ -115,18 +101,84 @@ export const columns: ColumnDef<saleData>[] = [
     cell: InputColumnField,
   },
   {
+    accessorKey: "itemName",
+    header: "Item Name",
+    cell: ComboboxColumnField,
+  },
+  {
     accessorKey: "grossWeight",
     header: "Gross Weight",
-    cell: InputColumnField,
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "freightRate",
+    header: "Freight Rate",
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "otherCharge",
+    header: "Other Charge",
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "labourRate",
+    header: "Labour Rate",
+    cell: ({row,column})=>{
+      return(
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "weight",
+    header: "weight",
+    cell: ({row,column})=>{
+      return(
+        <div className="w-96">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
   },
   {
     accessorKey: "cut",
     header: "Cut",
-    cell: InputColumnField,
+    cell: ({row,column})=>{
+      return(
+        <div className="w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "delete",
+    header: "Delete",
+    cell: DeleteColumnField,
   },
   {
     accessorKey: "date",
     header: "Date",
-    cell: InputColumnField,
+    cell: DateColumnField,
   },
 ];

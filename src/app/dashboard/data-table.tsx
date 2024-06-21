@@ -15,7 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -76,7 +75,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <Button>Save</Button>
     </div>
   );
 }

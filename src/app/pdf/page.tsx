@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-import { useFetchPdf } from "./query";
+import { useFetchPdf } from "./print1/query";
 
 // Create styles
 const styles = StyleSheet.create({

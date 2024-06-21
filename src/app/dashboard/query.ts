@@ -10,6 +10,10 @@ const fetchVclNo = async (date: Date, vclNo: string) => {
   return await api(methods.post, "/api/dashboard/get-vlcno-list", { date:date, vclNo:vclNo });
 };
 
+export const submitDashboard = async (data) => {
+  return await api(methods.post, '/api/dashboard/submit', data)
+}
+
 export const useFetchSale = (date: Date , vclNo: string) => {
   return useQuery({
     queryKey: ['fetchsale'],

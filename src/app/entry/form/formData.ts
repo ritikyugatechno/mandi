@@ -2,6 +2,7 @@ export enum formName {
   serialNo = 'serialNo',
   supplierName = 'supplierName',
   farmerName = 'farmerName',
+  lot = 'lot',
   itemName = 'itemName',
   nug = 'nug',
   customerName = 'customerName',
@@ -9,14 +10,17 @@ export enum formName {
   date = 'date',
   vclNo = 'vclNo',
   freightRate = 'freightRate',
+  freightKg = 'freightKg',
   otherCharge = 'otherCharge',
   labourRate = 'labourRate',
+  labourKg = 'labourKg',
 }
 
 export enum fieldType {
   input = 'input',
   commandInput = 'commandInput',
   selectInput = 'selectInput',
+  selectInputKg = 'selectInputKg',
   datePicker = 'datePicker',
   weightInput = 'weightInput',
   seprater = 'seprater'
@@ -56,6 +60,12 @@ export const formData: formDataType = [
     // className: 'w-40',
     type: 'text',
     placeholder: 'Enter farmerName',
+  },
+  {
+    fieldType: fieldType.commandInput,
+    name: formName.lot,
+    type: 'text',
+    placeholder: 'Enter Lot',
   },
   {
     fieldType: fieldType.selectInput,
@@ -113,6 +123,12 @@ export const formData: formDataType = [
     placeholder: 'Enter freightRate',
   },
   {
+    fieldType: fieldType.selectInputKg,
+    name: formName.freightKg,
+    type: 'number',
+    placeholder: 'Enter freightKgNug',
+  },
+  {
     fieldType: fieldType.input,
     name: formName.otherCharge,
     // className: 'w-40',
@@ -122,8 +138,13 @@ export const formData: formDataType = [
   {
     fieldType: fieldType.input,
     name: formName.labourRate,
-    // className: 'w-40',
     type: 'number',
     placeholder: 'Enter labourRate',
+  },
+  {
+    fieldType: fieldType.selectInputKg,
+    name: formName.labourKg,
+    type: 'number',
+    placeholder: 'Enter labourKgNug',
   },
 ]

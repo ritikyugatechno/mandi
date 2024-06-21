@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +20,23 @@ export default function RootLayout({
   return (
     <html className="" lang="en">
       <body className={inter.className}>
+        <nav className="flex justify-center gap-4 mt-2">
+          <Link href={'/entry'}>
+            <Button variant={"outline"}>
+              Entry
+              </Button>
+          </Link>
+          <Link href={'/dashboard'}>
+            <Button variant={'outline'}>
+          Dashboard
+              </Button>
+          </Link>
+          <Link href={'/pdf/print1'}>
+            <Button variant={'outline'}>
+          Print
+              </Button>
+          </Link>
+        </nav>
         {children}
          <Toaster position="top-center" richColors={true} />
       </body>

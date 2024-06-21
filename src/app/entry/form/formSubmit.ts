@@ -1,20 +1,3 @@
-
-//   const formSubmit = async (e: { preventDefault: () => void; }) => {
-//     console.log('hi formsumit')
-//     e.preventDefault();
-//     const data = { ...entryData, ...weights }
-//     const response = await submitFormData(data)
-//     if (!response.success) {
-//       toast.error("error while submitting form")
-//     }
-//     if (response.success) {
-//       toast.success('your form success submitted')
-//     }
-//     dispatch(resetEntry())
-//     dispatch(resetWeight())
-//     return
-//   }
-
 import { toast } from "sonner";
 import { store } from "../data/store";
 import { submitFormData } from "../data/query";
@@ -39,5 +22,7 @@ export const formSubmit = async (e: { preventDefault: () => void; } , eventTrue:
     }
     dispatch(resetEntry())
     dispatch(resetWeight())
+    const Element = document.querySelector(`[data-autofocus='true']`);
+    Element.focus();
     return
 }

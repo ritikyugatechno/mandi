@@ -1,5 +1,6 @@
 import prisma from "@/lib/prismaClient";
 import { NextApiRequest, NextApiResponse } from "next";
+import { number } from "zod";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +38,8 @@ export default async function handler(
     })
     const netWeight = grossWeight - (parseFloat(data.nug) * parseFloat(cut))
     const avgWeight = netWeight;
-    const weight = data.weight.join("+")
+    const removeZeroWeight = data.weight.filter(e => parseInt(e) !== 0)
+    const weight = removeZeroWeight.join("+")
     await prisma.formData.create(
       {
         data: {
@@ -65,6 +67,7 @@ export default async function handler(
         }
       }
     )
+    console.log(weight)
     return res.status(200).json({ success: true });
   }
   else {

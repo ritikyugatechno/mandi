@@ -15,7 +15,7 @@ const CustomerName = ({ data }) => {
                             <div className="flex justify-between">
                                 <span>{item.cNug}</span>
                                 <span>{item.customerName}</span>
-                                <span>{item.customerName}</span>
+                                <span>{item.weight}</span>
                                 </div>
 
                         </div>

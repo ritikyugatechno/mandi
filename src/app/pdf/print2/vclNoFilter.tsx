@@ -15,7 +15,7 @@ const VclNoFilter = ({ data }) => {
                     return (
                         <div key={vclNo} className="border w-96">
                             <div className="flex justify-between">
-                                <span>{vclNoFilter.map((item)=>(<>{item.itemName}</>))}</span>
+                                <span>{vclNoFilter.reduce((item)=>item.itemName == item.itemName)}</span>
                                 <span>{vclNo}</span>
                             </div>
                             <VclList data={vclNoFilter} />

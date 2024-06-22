@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18
+      - name: Use Node.js 20
         uses: actions/setup-node@v1
         with:
-          node-version: 18.x
+          node-version: 20.x
       - name: Install dependencies
         run: npm i
       - name: Build the app
@@ -22,4 +22,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages  # Replace with the branch for deployment (optional)
-          folder: out      # The output folder from the build process
+          folder: .next      # The output folder from the build process

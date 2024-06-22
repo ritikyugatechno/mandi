@@ -29,7 +29,6 @@ export const entrySlice = createSlice({
     },
     resetEntry: (state)=>{
       state['serialNo'] = (parseInt(state['serialNo']) + 1) + '';
-      state['nug'] = ''
     }
   }
 })

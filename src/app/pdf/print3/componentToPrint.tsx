@@ -5,8 +5,10 @@ interface ComponentToPrintProps {}
 
 const ComponentToPrint = forwardRef<HTMLDivElement, ComponentToPrintProps>((props, ref) => {
   return (
-    <div ref={ref}>My cool content here!</div>
+    <div key={'ComponentToPrint3'} ref={ref}>My cool content here!</div>
   );
 });
+
+ComponentToPrint.displayName = 'ComponentToPrint3'
 
 export default ComponentToPrint;

@@ -4,16 +4,16 @@ import FarmerList from "./farmerList";
 const SupplierList = ({ data, srNo }) => {
     const uniqueSupplier = [
         ...new Set(data.map((item) => item.supplierName)),
-    ];
+    ] as any;
     const uniqueFarmer = [
         ...new Set(data.map((item) => item.farmerName)),
     ];
     const uniqueVlcNo = [
         ...new Set(data.map((item) => item.vclNo)),
-    ]
+    ] as any
     const uniqueDate = [
         ...new Set(data.map((item) => item.date)),
-    ]
+    ] as any;
     const totalBasicAmount = data.reduce((accumulator, currentValue) => {
         return accumulator + parseFloat(currentValue.basicAmount)
     }, 0)
@@ -58,12 +58,12 @@ const SupplierList = ({ data, srNo }) => {
                         <TableCell></TableCell>
                     </TableRow>
                         {
-                            uniqueFarmer.map((fName) => {
+                            uniqueFarmer.map((fName: string) => {
                                 const farmerNameFilter = data.filter(
                                     (item) => item.farmerName === fName
                                 );
                                 return (
-                                    <FarmerList data={farmerNameFilter} />
+                                    <FarmerList key={fName} data={farmerNameFilter} />
                                 );
                             })
                         }

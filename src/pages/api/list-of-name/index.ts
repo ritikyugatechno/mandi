@@ -12,10 +12,11 @@ export default async function handler(
         farmerName: true,
         customerName: true,
         itemName: true,
-        vclNo: true
+        vclNo: true,
+        lot: true
       }
     });
-    type FormDataKeys = 'supplierName' | 'farmerName' | 'customerName' | 'itemName' | 'vclNo';
+    type FormDataKeys = 'supplierName' | 'farmerName' | 'customerName' | 'itemName' | 'vclNo' | 'lot';
 
     const getFilteredData = (name: FormDataKeys) => {
       const mapList = data.map(item => item[name]);
@@ -30,7 +31,8 @@ export default async function handler(
       'farmerName': getFilteredData('farmerName'),
       'customerName': getFilteredData('customerName'),
       'itemName': getFilteredData('itemName'),
-      'vclNo': getFilteredData('vclNo')
+      'vclNo': getFilteredData('vclNo'),
+      'lot': getFilteredData('lot')
     });
   }
   else if (req.method === "POST") {

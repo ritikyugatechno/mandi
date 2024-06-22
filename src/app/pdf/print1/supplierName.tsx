@@ -9,7 +9,7 @@ const SupplierName = ({ data }) => {
             <div className="text-center">श्री गणेशाय नमः।</div>
             <div className="flex flex-wrap gap-4">
                 {
-                    uniqueSupplier.map((sName) => {
+                    uniqueSupplier.map((sName: string) => {
                         const supplierNameFilter = data.filter(
                             (item) => item.supplierName === sName
                         );

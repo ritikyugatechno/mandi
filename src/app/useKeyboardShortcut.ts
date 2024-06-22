@@ -15,7 +15,7 @@ const useKeyboardShortcut = (keyCombo: string, url: string) => {
         event.key === key
       ) {
         event.preventDefault(); // Prevent the default action for the key combination
-        router.push(url);
+        window.location.href = url
       }
     };
 

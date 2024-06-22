@@ -4,6 +4,7 @@ import queryClient from "../queryClient";
 import { Provider } from "react-redux";
 import { store } from "./data/store";
 import useKeyboardShortcut from "../useKeyboardShortcut";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,

@@ -8,14 +8,14 @@ const VclNoFilter = ({ data }) => {
         <div>
             <div className="text-center">श्री गणेशाय नमः।</div>
             {
-                uniqueVclNo.map((vclNo) => {
+                uniqueVclNo.map((vclNo : string) => {
                     const vclNoFilter = data.filter(
                         (item) => item.vclNo === vclNo
                     );
                     return (
                         <div key={vclNo} className="border w-96">
                             <div className="flex justify-between">
-                                <span>{vclNoFilter.reduce((item)=>item.itemName == item.itemName)}</span>
+                                <span>{vclNoFilter[0].itemName}</span>
                                 <span>{vclNo}</span>
                             </div>
                             <VclList data={vclNoFilter} />
@@ -28,3 +28,7 @@ const VclNoFilter = ({ data }) => {
 }
 
 export default VclNoFilter
+/*
+
+
+            */

@@ -15,13 +15,25 @@ export default async function handler(
     let grossWeight: number = 0;
     let cut = 0;
     if(data.typeItem == 'box'){
-      cut = 0.5;
+      cut = 1.25;
     }else if(data.typeItem == 'daba'){
-      cut = 1.5;
+      cut = 0.5;
     }else if(data.typeItem == 'peti'){
-      cut = 1;
+      cut = 3;
     }else if(data.typeItem == 'plate'){
-      cut = 3
+      cut = 0.25;
+    }
+    else if(data.typeItem == 'charat1'){
+      cut = 1;
+    }
+    else if(data.typeItem == 'charat2'){
+      cut = 2;
+    }
+    else if(data.typeItem == 'charat3'){
+      cut = 1.5;
+    }
+    else if(data.typeItem == 'charat4'){
+      cut = 0.75;
     }
 
     let labourKg = false;
@@ -36,7 +48,7 @@ export default async function handler(
     data.weight.map((w:string) => {
       grossWeight = grossWeight + parseFloat(w)
     })
-    const netWeight = grossWeight - (parseFloat(data.nug) * parseFloat(cut))
+    const netWeight = grossWeight - (parseFloat(data.nug) * cut)
     const avgWeight = netWeight;
     const removeZeroWeight = data.weight.filter(e => parseInt(e) !== 0)
     const weight = removeZeroWeight.join("+")
@@ -57,6 +69,13 @@ export default async function handler(
           freightRate: parseFloat(data.freightRate),
           otherCharge: parseFloat(data.otherCharge),
           labourRate: parseFloat(data.labourRate),
+          supplierRate: 0,
+          customerRate: 0,
+          basicAmount:0,
+          bikariAmount: 0,
+          freightTotal:0,
+          labourTotal:0,
+          otherChargeTotal:0,
           freightKg,
           labourKg,
           weight,
@@ -67,7 +86,6 @@ export default async function handler(
         }
       }
     )
-    console.log(weight)
     return res.status(200).json({ success: true });
   }
   else {

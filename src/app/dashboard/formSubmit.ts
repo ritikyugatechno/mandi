@@ -13,6 +13,8 @@ export const formSubmit = async (e: { preventDefault: () => void; } , eventTrue:
     }
     if (response.success) {
         toast.success('your form success submitted')
+        window.location.href = '/dashboard'
     }
+
     return
 }

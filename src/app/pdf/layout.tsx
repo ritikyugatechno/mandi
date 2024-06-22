@@ -3,10 +3,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../queryClient";
 import { Provider } from "react-redux";
 import React from "react";
-import { store } from "../dashboard/store";
 import useKeyboardShortcut from "../useKeyboardShortcut";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { store } from "./store";
 
 export default function PdfLayout({
   children,

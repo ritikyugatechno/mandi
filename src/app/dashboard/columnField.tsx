@@ -12,10 +12,12 @@ import { Popover, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import { KeyboardEvent, KeyboardEvent, AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import {
+  KeyboardEvent,
+  useState
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "./store";
-import { useFetchSale } from "./query";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -28,8 +30,19 @@ import { format } from "date-fns";
 import { updataData } from "./dataSlice";
 import { deleteNewData, undeleteNewData, updataNewData } from "./filterDataSlice";
 import { Checkbox } from "@/components/ui/checkbox";
-let keysPressed = {};
-const ColumnArray = [
+
+interface Column {
+  id: string;
+}
+
+interface Row {
+  index: number;
+  getValue: (id: string) => string;
+}
+
+let keysPressed: { [key: string]: boolean } = {};
+
+const ColumnArray: string[] = [
   "serialNo",
   "vclNo",
   "supplierName",
@@ -51,18 +64,19 @@ const ColumnArray = [
   "cut",
   "delete",
   "date",
-]
+];
 
 const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
   keysPressed[e.key] = false;
 };
-const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLButtonElement>, row: { index: number; }, column: { id: any; }) => {
+
+const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLButtonElement>, row: Row, column: Column) => {
   keysPressed[e.key] = true;
   if (e.key === "ArrowDown") {
     e.preventDefault();
     const Element = document.querySelector(
       `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`
-    );
+    ) as HTMLElement;
     if (Element) {
       Element.focus();
     }
@@ -70,41 +84,37 @@ const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLBu
     e.preventDefault();
     const Element = document.querySelector(
       `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
-    );
+    ) as HTMLElement;
     if (Element) {
       Element.focus();
     }
-  }
-  else if (e.key === "ArrowLeft") {
+  } else if (e.key === "ArrowLeft") {
     e.preventDefault();
-    const columnIndex = ColumnArray.indexOf(column.id)
+    const columnIndex = ColumnArray.indexOf(column.id);
     if ((ColumnArray.length - 1) >= columnIndex) {
       const Element = document.querySelector(
         `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex - 1]}']`
-      );
+      ) as HTMLElement;
       if (Element) {
         Element.focus();
       }
     }
-  }
-  else if (e.key === "ArrowRight") {
+  } else if (e.key === "ArrowRight") {
     e.preventDefault();
-    const columnIndex = ColumnArray.indexOf(column.id)
+    const columnIndex = ColumnArray.indexOf(column.id);
     if (0 <= columnIndex) {
       const Element = document.querySelector(
         `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex + 1]}']`
-      );
+      ) as HTMLElement;
       if (Element) {
         Element.focus();
       }
     }
   }
-  else {
-  }
 };
 
-const onChangeHandle = (value, row, column) => {
-  const dispatch = (data) => store.dispatch(data)
+const onChangeHandle = (value: any, row: Row, column: Column) => {
+  const dispatch = (data: any) => store.dispatch(data);
   const newArray = {
     row: row.index,
     column: column.id,
@@ -113,7 +123,7 @@ const onChangeHandle = (value, row, column) => {
   dispatch(updataNewData(newArray));
 };
 
-export const InputColumnField = ({ row, column }) => {
+export const InputColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const datas = useSelector((state: RootState) => state.filterDataReducer.datas);
   return (
     <div className="min-w-3">
@@ -130,14 +140,12 @@ export const InputColumnField = ({ row, column }) => {
   );
 };
 
-export const ComboboxColumnField = ({ row, column }) => {
+export const ComboboxColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const datas = useSelector((state: RootState) => state.filterDataReducer.datas);
   const allData = useSelector((state: RootState) => state.dataReducer.datas);
-  const dataList = [...new Set(allData.map((item) => item[column.id]))];
+  const dataList = [...new Set(allData.map((item: any) => item[column.id]))];
   const [open, setOpen] = useState(false);
   const thisValue = datas[row.index][column.id];
-  const [value, setValue] = useState(thisValue);
-  const [newValue, setNewValue] = useState('');
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>
@@ -149,11 +157,11 @@ export const ComboboxColumnField = ({ row, column }) => {
             data-column-name={column.id}
             aria-expanded={open}
             className="w-[200px] justify-between"
-            onKeyUp={(e) => handleKeyUp(e)}
-            onKeyDown={(e) => handleKeyDown(e, row, column)}
+            onKeyUp={(e: any) => handleKeyUp(e)}
+            onKeyDown={(e: any) => handleKeyDown(e, row, column)}
           >
-            {value !== ''
-              ? value
+            {thisValue !== ''
+              ? thisValue
               : "Select dataValue..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -162,40 +170,20 @@ export const ComboboxColumnField = ({ row, column }) => {
           <Command>
             <CommandInput
               placeholder={`Search ${column.id}...`}
-              defaultValue={thisValue}
+              value={thisValue}
               onValueChange={(e: string) => {
-                setNewValue(e)
-                console.log(e)
+                onChangeHandle(e, row, column);
               }}
             />
             <CommandList>
               <CommandEmpty>
                 No {column.id} found.
-
-                <CommandItem
-                  key={newValue}
-                  onSelect={() => {
-                    setValue(newValue);
-                    setOpen(false);
-                    onChangeHandle(newValue, row, column);
-                  }}
-                >
-                  {" "}
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === newValue ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {newValue} Titik
-                </CommandItem>
               </CommandEmpty>
               <CommandGroup>
-                {dataList.map((dataValue: { value: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
+                {dataList.map((dataValue: string) => (
                   <CommandItem
                     key={dataValue}
                     onSelect={() => {
-                      setValue(dataValue);
                       setOpen(false);
                       onChangeHandle(dataValue, row, column);
                     }}
@@ -204,7 +192,7 @@ export const ComboboxColumnField = ({ row, column }) => {
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value === dataValue ? "opacity-100" : "opacity-0"
+                        thisValue === dataValue ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {dataValue}
@@ -215,9 +203,8 @@ export const ComboboxColumnField = ({ row, column }) => {
             </CommandList>
           </Command>
           <Button onClick={() => {
-            setValue(newValue)
             setOpen(false)
-            onChangeHandle(newValue, row, column)
+            onChangeHandle(thisValue, row, column)
           }
           }>Add New Value</Button>
         </PopoverContent>
@@ -226,21 +213,22 @@ export const ComboboxColumnField = ({ row, column }) => {
   );
 };
 
-export const SelectColumnField = ({ row, column }) => {
+export const SelectColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const datas = useSelector((state: RootState) => state.filterDataReducer.datas);
   const thisValue = datas[row.index][column.id];
   return (
     <Select
-      defaultValue={thisValue}
+      value={thisValue}
       onValueChange={(value) => onChangeHandle(value, row, column)}
     >
       <SelectTrigger
         data-row-index={row.index}
         data-column-name={column.id}
-        onKeyUp={(e) => handleKeyUp(e)}
-        onKeyDown={(e) => handleKeyDown(e, row, column)}
+        onKeyUp={(e: any) => handleKeyUp(e)}
+        onKeyDown={(e: any) => handleKeyDown(e, row, column)}
         className="w-64">
         <SelectValue
+          defaultValue={thisValue}
           placeholder="Select an option" />
       </SelectTrigger>
       <SelectContent
@@ -249,12 +237,16 @@ export const SelectColumnField = ({ row, column }) => {
         <SelectItem value="daba">Daba</SelectItem>
         <SelectItem value="box">Box</SelectItem>
         <SelectItem value="plate">Plate</SelectItem>
+        <SelectItem value="charat1">Charat1</SelectItem>
+        <SelectItem value="charat2">Charat2</SelectItem>
+        <SelectItem value="charat3">Charat3</SelectItem>
+        <SelectItem value="charat4">Charat3</SelectItem>
       </SelectContent>
     </Select>
   );
 };
 
-export const DateColumnField = ({ row, column }) => {
+export const DateColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const handleDateSelect = async (newDate: Date) => {
@@ -269,7 +261,7 @@ export const DateColumnField = ({ row, column }) => {
           variant="outline"
           data-row-index={row.index}
           data-column-name={column.id}
-          onKeyUp={(e) => handleKeyUp(e)}
+          onKeyUp={(e: any) => handleKeyUp(e)}
           onKeyDown={(e) => handleKeyDown(e, row, column)}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
@@ -289,32 +281,30 @@ export const DateColumnField = ({ row, column }) => {
         <Calendar
           mode="single"
           selected={selectedDate}
-          onSelect={handleDateSelect}
+          onSelect={(e: any) => handleDateSelect(e)}
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
-
-export const DeleteColumnField = ({ row, column }) => {
+export const DeleteColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const deleteAndUndelete = (e: boolean) => {
     const dispatch = store.dispatch;
     if (e) {
-      dispatch(deleteNewData(row.index))
+      dispatch(deleteNewData(row.index));
+    } else {
+      dispatch(undeleteNewData(row.index));
     }
-    else {
-      dispatch(undeleteNewData(row.index))
-    }
-  }
+  };
   return (
     <div className="min-w-3">
       <Checkbox
         onCheckedChange={(e: boolean) => deleteAndUndelete(e)}
         data-row-index={row.index}
         data-column-name={column.id}
-        onKeyUp={(e) => handleKeyUp(e)}
-        onKeyDown={(e) => handleKeyDown(e, row, column)}
+        onKeyUp={(e: any) => handleKeyUp(e)}
+        onKeyDown={(e: any) => handleKeyDown(e, row, column)}
       />
     </div>
   );

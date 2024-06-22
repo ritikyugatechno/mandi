@@ -22,7 +22,7 @@ export const formSubmit = async (e: { preventDefault: () => void; } , eventTrue:
     }
     dispatch(resetEntry())
     dispatch(resetWeight())
-    const Element = document.querySelector(`[data-autofocus='true']`);
+    const Element = document.querySelector(`[data-autofocus='true']`) as HTMLElement;
     Element.focus();
     return
 }

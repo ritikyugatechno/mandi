@@ -60,13 +60,8 @@ const Entry = () => {
         event.altKey &&
         event.key === 's'
       ) {
-        if (formRef.current) {
-          event.preventDefault();
-          console.log('hi ');
-          console.log(formRef)
-          // formRef.current.submit();
-          formSubmit(event, false);
-        }
+        event.preventDefault();
+        formSubmit(event, false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -115,6 +110,19 @@ const Entry = () => {
   if (isError) {
     return <div>Error loading data</div>;
   }
+  const allInput = Array.from(document.querySelectorAll("[data-key='tab']")) as [HTMLElement]
+  allInput.forEach((input, index) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key == 'Enter') {
+        if (allInput.length > index + 1) {
+          allInput[index + 1].focus();
+        } else {
+          allInput[0].focus();
+        }
+      }
+    })
+  })
+
 
   return (
     <>
@@ -126,36 +134,37 @@ const Entry = () => {
                 <div className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   {field.autofocus
-                  ?(
+                    ? (
 
-                  <Input
-                    onKeyDown={doNothingEnter}
-                    key={field.name}
-                    name={field.name}
-                    type={field.type}
-                    className={`w-64 ${field.className}`}
-                    min={0}
-                    placeholder={field.placeholder}
-                    value={entryData[field.name]}
-                    onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
-                    required
-                    data-autofocus='true'
-                  />
-                  ):(
-                  <Input
-                    onKeyDown={doNothingEnter}
-                    key={field.name}
-                    name={field.name}
-                    type={field.type}
-                    className={`w-64 ${field.className}`}
-                    min={0}
-                    placeholder={field.placeholder}
-                    value={entryData[field.name]}
-                    onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
-                    required
-                  />
-                  )
-                }
+                      <Input
+                        data-key='tab'
+                        onKeyDown={doNothingEnter}
+                        key={field.name}
+                        name={field.name}
+                        type={field.type}
+                        className={`w-64 ${field.className}`}
+                        placeholder={field.placeholder}
+                        value={entryData[field.name]}
+                        onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
+                        required
+                        data-autofocus='true'
+                      />
+                    ) : (
+                      <Input
+                        onKeyDown={doNothingEnter}
+                        data-key='tab'
+                        key={field.name}
+                        name={field.name}
+                        type={field.type}
+                        className={`w-64 ${field.className}`}
+                        min={0}
+                        placeholder={field.placeholder}
+                        value={entryData[field.name]}
+                        onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
+                        required
+                      />
+                    )
+                  }
                 </div>
               </>
             ) : field.fieldType === fieldType.commandInput ? (
@@ -165,6 +174,7 @@ const Entry = () => {
                   className="rounded-lg border shadow-md w-64 relative overflow-visible"
                 >
                   <CommandInput
+                    data-key='tab'
                     placeholder="Type a command or search..."
                     onFocus={() => handleFocus(field.name)}
                     onBlur={() => handleBlur(field.name)}
@@ -205,16 +215,23 @@ const Entry = () => {
                   }
                   key={field.name}
                   name={field.name}
-                  defaultValue="peti"
+                  value={entryData[field.name]}
                 >
-                  <SelectTrigger className="w-64">
-                    <SelectValue placeholder="Select an option" />
+                  <SelectTrigger
+                    data-key='tab'
+                    className="w-64">
+                    <SelectValue
+                      placeholder="Select an option" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="peti">Peti</SelectItem>
                     <SelectItem value="daba">Daba</SelectItem>
                     <SelectItem value="box">Box</SelectItem>
                     <SelectItem value="plate">Plate</SelectItem>
+                    <SelectItem value="charat1">Charat1</SelectItem>
+                    <SelectItem value="charat2">Charat2</SelectItem>
+                    <SelectItem value="charat3">Charat3</SelectItem>
+                    <SelectItem value="charat4">Charat3</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -222,7 +239,10 @@ const Entry = () => {
               <div className="flex flex-col gap-1">
                 <Label>{field.name}</Label>
                 <Popover>
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger
+                    data-key='tab'
+                    onKeyDown={doNothingEnter}
+                    asChild>
                     <Button
                       variant={"outline"}
                       className={cn(
@@ -250,14 +270,14 @@ const Entry = () => {
               </div>
             ) : field.fieldType === fieldType.weightInput ? (
               <div className='w-full flex gap-4 justify-center' >
-                <Button onClick={handleAddWeight} >Add Weigth</Button>
                 <div className="w-[750px] flex flex-wrap gap-4 justify-center">
                   {weight.map((w: string, index: number) => (
                     <>
                       <Input
                         onKeyDown={doNothingEnter}
-                        className="w-14"
+                        className="w-32"
                         key={index}
+                        data-key='tab'
                         value={weight[index]}
                         type="number"
                         min={0}
@@ -267,6 +287,7 @@ const Entry = () => {
                   ))
                   }
                 </div>
+                <Button onClick={handleAddWeight} >Add Weigth</Button>
               </div>
             ) : field.fieldType === fieldType.selectInputKg ? (
               <div className="flex flex-col gap-1">
@@ -278,8 +299,12 @@ const Entry = () => {
                   key={field.name}
                   name={field.name}
                 >
-                  <SelectTrigger className="w-64">
-                    <SelectValue placeholder="Select an option" />
+                  <SelectTrigger className="w-64"
+                    data-key='tab'
+                  >
+                    <SelectValue
+                      data-key='tab'
+                      placeholder="Select an option" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="true">Kg</SelectItem>
@@ -289,7 +314,9 @@ const Entry = () => {
               </div>
             ) : null
         )}
-        <Button type="submit">Save</Button>
+        <Button
+          data-key='tab'
+          type="submit">Save</Button>
       </form>
     </>
   );

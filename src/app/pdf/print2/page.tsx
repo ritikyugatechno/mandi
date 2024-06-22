@@ -14,7 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 import VclNoFilter from './vclNoFilter';
 
-export const Print1: React.FC = () => {
+const Print1: React.FC = () => {
   const contentToPrint = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -30,7 +30,7 @@ export const Print1: React.FC = () => {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
 
-  const vclList = []
+  const vclList = [] as any
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -93,8 +93,8 @@ export const Print1: React.FC = () => {
         <option value="">Select VclNo</option>
         <option value="all">All</option>
         {/* Add your vclNo options here */}
-        {uniqueVlcNo.map((data) => (
-        <option value={data}>{data}</option>
+        {uniqueVlcNo.map((data: string) => (
+        <option key={data} value={data}>{data}</option>
         ))}
         {/* Add more options as needed */}
       </select>

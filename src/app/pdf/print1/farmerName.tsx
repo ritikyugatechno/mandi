@@ -7,7 +7,7 @@ const FarmerName = ({ data }) => {
     return (
         <div>
             {
-                uniqueFarmer.map((fName) => {
+                uniqueFarmer.map((fName: string) => {
                     const farmerNameFilter = data.filter(
                         (item) => item.farmerName === fName
                     );

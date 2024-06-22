@@ -13,12 +13,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { useAppDispatch } from '../hooks';
+import { updataFistStartPoint } from './print3Slice';
 
-export const Print3: React.FC = () => {
+const Print3: React.FC = () => {
   const contentToPrint = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedVclNo, setSelectedVclNo] = useState<string>('');
+  const dispatch = useAppDispatch()
   const handlePrint = useReactToPrint({
     content: () => contentToPrint.current,
     documentTitle: "Print This Document",
@@ -30,7 +34,7 @@ export const Print3: React.FC = () => {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
 
-  const vclList = []
+  const vclList = [] as any
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -56,6 +60,9 @@ export const Print3: React.FC = () => {
   });
   
   const uniqueVlcNo = [...new Set(vclList)]
+  const changeFirstStartPoint = (e: { target: { value: string; }; }) =>{
+    dispatch(updataFistStartPoint(parseInt(e.target.value)))
+  }
   return (
     <>
       <div className='flex'>
@@ -93,11 +100,12 @@ export const Print3: React.FC = () => {
         <option value="">Select VclNo</option>
         <option value="all">All</option>
         {/* Add your vclNo options here */}
-        {uniqueVlcNo.map((data) => (
-        <option value={data}>{data}</option>
+        {uniqueVlcNo.map((data: string) => (
+        <option key={data} value={data}>{data}</option>
         ))}
         {/* Add more options as needed */}
       </select>
+      <Input min={0} type='number' onChange={changeFirstStartPoint} />
       <Button className='ml-auto mr-10' onClick={handlePrint}>
         PRINT
       </Button>

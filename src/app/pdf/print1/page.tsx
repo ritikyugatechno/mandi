@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from '@/lib/utils';
 
-export const Print1: React.FC = () => {
+const Print1: React.FC = () => {
   const contentToPrint = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -30,7 +30,7 @@ export const Print1: React.FC = () => {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
 
-  const vclList = []
+  const vclList = [] as any
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -42,68 +42,66 @@ export const Print1: React.FC = () => {
   const filteredTableData = data.filter((item: { date: string | number | Date; vclNo: string; }) => {
     const itemDate = new Date(item.date);
     let isDateMatch = isSameDay(itemDate, selectedDate);
-    if(isDateMatch ){
+    if (isDateMatch) {
       vclList.push(item.vclNo)
     }
-    let isVclNoMatch = item.vclNo === selectedVclNo ? true: false;
-    if(selectedVclNo === "all"){
+    let isVclNoMatch = item.vclNo === selectedVclNo ? true : false;
+    if (selectedVclNo === "all") {
       isDateMatch = true;
       isVclNoMatch = true;
     }
-    if(isDateMatch && isVclNoMatch){
+    if (isDateMatch && isVclNoMatch) {
       return item
     }
   });
-  
+
   const uniqueVlcNo = [...new Set(vclList)]
   return (
     <>
       <div className='flex'>
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "w-[280px] justify-start text-left font-normal",
-              !selectedDate && "text-muted-foreground"
-            )}
-            onClick={() => setIsPopoverOpen(true)}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {selectedDate ? (
-              format(selectedDate, "PPP")
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleDateSelect}
-          />
-        </PopoverContent>
-      </Popover>
-      <select
-        value={selectedVclNo}
-        onChange={handleVclNoSelect}
-        className="border rounded p-2"
-      >
-        <option value="">Select VclNo</option>
-        <option value="all">All</option>
-        {/* Add your vclNo options here */}
-        {uniqueVlcNo.map((data) => (
-        <option value={data}>{data}</option>
-        ))}
-        {/* Add more options as needed */}
-      </select>
-      <Button className='ml-auto mr-10' onClick={handlePrint}>
-        PRINT
-      </Button>
-      </div>
-      <div ref={contentToPrint}>
-        <SupplierName data={filteredTableData} />
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-[280px] justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+              onClick={() => setIsPopoverOpen(true)}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? (
+                format(selectedDate, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+            />
+          </PopoverContent>
+        </Popover>
+        <select
+          value={selectedVclNo}
+          onChange={handleVclNoSelect}
+          className="border rounded p-2"
+        >
+          <option value="">Select VclNo</option>
+          <option value="all">All</option>
+          {uniqueVlcNo.map((data: string) => (
+            <option key={data} value={data}>{data}</option>
+          ))}
+        </select>
+        <Button className='ml-auto mr-10' onClick={handlePrint}>
+          PRINT
+        </Button>
+        <div ref={contentToPrint}>
+          <SupplierName data={filteredTableData} />
+        </div>
       </div>
     </>
   );

@@ -22,7 +22,7 @@ const mergedData = Object.values(data.reduce((acc, currentValue) => {
     return (
         <>
             {
-                mergedData.map((item) => {
+                mergedData.map((item: any) => {
                     return (
                         <>
                     <TableRow >

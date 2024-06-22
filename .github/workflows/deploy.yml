@@ -1,0 +1,27 @@
+# This workflow will deploy a Next.js project on push
+
+on:
+  push:
+    branches: [ main ]  # Replace 'main' with your branch name if different
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - name: Install dependencies
+        run: npm ci
+      - name: Installing Sqlite
+        run: npm prisma migrate dev
+      - name: Build the app
+        run: npm run build
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.6.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages  # Replace with the branch for deployment (optional)
+          folder: out      # The output folder from the build process

@@ -124,58 +124,45 @@ const Entry = () => {
   })
 
 
+
   return (
     <>
-      <form ref={formRef} onSubmit={formSubmit} className="flex flex-wrap p-12 gap-10 w-[1000px] m-auto justify-center" >
+      <form ref={formRef} onSubmit={formSubmit} className="p-6" >
+        <div className="flex p-6 flex-wrap border-gray-600 bg-white border-8 gap-10 m-auto justify-center">
         {formData.map(
           (field) =>
             field.fieldType === fieldType.input ? (
               <>
                 <div className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
-                  {field.autofocus
-                    ? (
-
-                      <Input
-                        data-key='tab'
-                        onKeyDown={doNothingEnter}
-                        key={field.name}
-                        name={field.name}
-                        type={field.type}
-                        className={`w-64 ${field.className}`}
-                        placeholder={field.placeholder}
-                        value={entryData[field.name]}
-                        onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
-                        required
-                        data-autofocus='true'
-                      />
-                    ) : (
-                      <Input
-                        onKeyDown={doNothingEnter}
-                        data-key='tab'
-                        key={field.name}
-                        name={field.name}
-                        type={field.type}
-                        className={`w-64 ${field.className}`}
-                        min={0}
-                        placeholder={field.placeholder}
-                        value={entryData[field.name]}
-                        onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
-                        required
-                      />
-                    )
-                  }
+                  <Input
+                    data-key='tab'
+                    autoFocus={field.autofocus}
+                    onKeyDown={doNothingEnter}
+                    key={field.name}
+                    name={field.name}
+                    type={field.type}
+                    className={`w-fit ${field.className}`}
+                    placeholder={field.placeholder}
+                    value={entryData[field.name]}
+                    onChange={(e) => dispatch(updateEntry({ name: field.name, value: e.target.value }))}
+                    required
+                    data-autofocus='true'
+                    onFocus={(e) => e.target.select()}
+                    data-select={field.dataKey}
+                  />
                 </div>
               </>
             ) : field.fieldType === fieldType.commandInput ? (
               <div className="flex flex-col gap-1">
                 <Label>{field.name}</Label>
                 <Command
-                  className="rounded-lg border shadow-md w-64 relative overflow-visible"
+                  className="rounded-lg border w-fit shadow-md relative overflow-visible"
                 >
                   <CommandInput
                     data-key='tab'
-                    placeholder="Type a command or search..."
+                    className={`${field.className}`}
+                    placeholder="Type ..."
                     onFocus={() => handleFocus(field.name)}
                     onBlur={() => handleBlur(field.name)}
                     value={entryData[field.name]}
@@ -210,8 +197,10 @@ const Entry = () => {
               <div className="flex flex-col gap-1">
                 <Label>{field.name}</Label>
                 <Select
-                  onValueChange={(value) =>
-                    dispatch(updateEntry({ name: field.name, value: value }))
+                  onValueChange={(value) =>{
+                    dispatch(updateEntry({ name: field.name, value: value }));
+
+                  }
                   }
                   key={field.name}
                   name={field.name}
@@ -219,7 +208,7 @@ const Entry = () => {
                 >
                   <SelectTrigger
                     data-key='tab'
-                    className="w-64">
+                    className="w-20">
                     <SelectValue
                       placeholder="Select an option" />
                   </SelectTrigger>
@@ -280,8 +269,8 @@ const Entry = () => {
                         data-key='tab'
                         value={weight[index]}
                         type="number"
-                        min={0}
                         onChange={(e) => dispatch(updataWeight({ index: index, value: e.target.value }))}
+                        onFocus={(e) => e.target.select()}
                       />
                     </>
                   ))
@@ -299,8 +288,9 @@ const Entry = () => {
                   key={field.name}
                   name={field.name}
                 >
-                  <SelectTrigger className="w-64"
+                  <SelectTrigger 
                     data-key='tab'
+                      className="w-20"
                   >
                     <SelectValue
                       data-key='tab'
@@ -317,6 +307,8 @@ const Entry = () => {
         <Button
           data-key='tab'
           type="submit">Save</Button>
+
+        </div>
       </form>
     </>
   );

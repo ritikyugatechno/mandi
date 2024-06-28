@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html className="" lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gray-600`}>
         <nav className="flex justify-center gap-4 mt-2">
           <a href={'/entry'}>
             <Button variant={"outline"}>

@@ -30,7 +30,7 @@ export type saleData = {
 export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "serialNo",
-    header: "Serial Number",
+    header: "S No",
     cell: InputColumnField,
   },
   {
@@ -49,9 +49,15 @@ export const columns: ColumnDef<saleData>[] = [
     cell: ComboboxColumnField,
   },
   {
-    accessorKey: "typeItem",
-    header: "Type Item",
-    cell: SelectColumnField,
+    accessorKey: "cut",
+    header: "Cut",
+    cell: ({row,column})=>{
+      return(
+        <div className="w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
   },
   {
     accessorKey: "sNug",
@@ -161,17 +167,6 @@ export const columns: ColumnDef<saleData>[] = [
     },
   },
   {
-    accessorKey: "cut",
-    header: "Cut",
-    cell: ({row,column})=>{
-      return(
-        <div className="w-12">
-          <InputColumnField row={row} column={column} />
-        </div>
-      )
-    },
-  },
-  {
     accessorKey: "delete",
     header: "Delete",
     cell: DeleteColumnField,
@@ -180,5 +175,10 @@ export const columns: ColumnDef<saleData>[] = [
     accessorKey: "date",
     header: "Date",
     cell: DateColumnField,
+  },
+  {
+    accessorKey: "typeItem",
+    header: "Type Item",
+    cell: SelectColumnField,
   },
 ];

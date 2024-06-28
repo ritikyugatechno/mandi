@@ -35,9 +35,11 @@ export default function PdfLayout({
               </Button>
           </Link>
         </nav>
+        <div className="bg-white">
         <QueryClientProvider client={queryClient}>
             <Provider store={store}>{children}</Provider>
         </QueryClientProvider>
+        </div>
       </>
     )
 }

@@ -13,7 +13,7 @@ const FarmerName = ({ data }) => {
                     );
                     return (
                         <div key={fName}>
-                            <div>fName: {fName}</div>
+                            <div className="font-bold">{fName}</div>
                             <CustomerName data={farmerNameFilter} />
                         </div>
                     );

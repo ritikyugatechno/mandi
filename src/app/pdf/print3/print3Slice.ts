@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    firstStartPoint : 0,
+    firstStartPoint : 1,
 }
 export const Print3Slice = createSlice({
   name: 'print3',

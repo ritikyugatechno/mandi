@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import FarmerList from "./farmerList";
+import LotFilter from "./lotFilter";
 
 const SupplierList = ({ data, srNo }) => {
     const uniqueSupplier = [
@@ -7,7 +7,10 @@ const SupplierList = ({ data, srNo }) => {
     ] as any;
     const uniqueFarmer = [
         ...new Set(data.map((item) => item.farmerName)),
-    ];
+    ] as any;
+    const uniqueItem = [
+        ...new Set(data.map((item) => item.itemName)),
+    ] as any;
     const uniqueVlcNo = [
         ...new Set(data.map((item) => item.vclNo)),
     ] as any
@@ -15,7 +18,7 @@ const SupplierList = ({ data, srNo }) => {
         ...new Set(data.map((item) => item.date)),
     ] as any;
     const totalBasicAmount = data.reduce((accumulator, currentValue) => {
-        return accumulator + parseFloat(currentValue.basicAmount)
+        return accumulator + parseFloat(currentValue.bikariAmount)
     }, 0)
     const totalOtherCharge = data.reduce((accumulator, currentValue) => {
         return accumulator + parseFloat(currentValue.otherChargeTotal)
@@ -42,66 +45,70 @@ const SupplierList = ({ data, srNo }) => {
 
     const formattedDate = `${day}/${month}/${year}`;
     return (
-        <div className="flex px-10 justify-center">
-            <Table className="">
+        <div className="flex px-10 py-2 justify-center w-[794px]">
+            <Table className="border-2 border-black ">
                 <TableBody>
-                    <TableRow >
-                        <TableCell>{uniqueSupplier[0]}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
+                    <TableRow className="border-b-black" >
+                        <TableCell colSpan={4} className="border-r-[1px] border-r-black">
+                            <div className="text-base font-bold">
+                                {uniqueSupplier[0]}
+                            </div>
+                            <div>
+                                {uniqueFarmer[0]}
+                            </div>
+                            <div>
+                                {uniqueItem[0]}
+                            </div>
+                        </TableCell>
                         <TableCell className="text-right" colSpan={3}>
                             <div>{srNo + 1}</div>
                             <div>{formattedDate}</div>
                             <div>{uniqueVlcNo[0]}</div>
                         </TableCell>
-                        <TableCell></TableCell>
                     </TableRow>
-                        {
-                            uniqueFarmer.map((fName: string) => {
-                                const farmerNameFilter = data.filter(
-                                    (item) => item.farmerName === fName
-                                );
-                                return (
-                                    <FarmerList key={fName} data={farmerNameFilter} />
-                                );
-                            })
-                        }
-                    <TableRow className="">
+                    {
+                        uniqueFarmer.map((fName: string) => {
+                            const farmerNameFilter = data.filter(
+                                (item) => item.farmerName === fName
+                            );
+                            return (
+                                <LotFilter key={fName} data={farmerNameFilter} />
+                            );
+                        })
+                    }
+                    <TableRow className="border-2 border-black text-base font-bold">
                         <td></td>
                         <td></td>
-                        <td>{totalSNug}</td>
-                        <td>{totalAvgWeight}</td>
+                        <td className="text-end">{totalSNug}</td>
+                        <td className="text-end">{totalAvgWeight}</td>
                         <td></td>
-                        <td></td>
-                        <td>{totalBasicAmount}</td>
+                        <td className="font-bold">Basic Amt</td>
+                        <td className="text-end font-bold pr-2">{parseFloat(totalBasicAmount).toFixed(2)}</td>
                     </TableRow>
-                    <TableRow className="border-0">
+                    <TableRow className="border-0 font-bold">
+                        <td className="text-end" colSpan={2}>Other Charge</td>
+                        <td className="text-end">{parseFloat(totalOtherCharge).toFixed(2)}</td>
                         <td></td>
                         <td></td>
-                        <td>{parseFloat(totalOtherCharge).toFixed(2)}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{parseFloat(totalCharge).toFixed(2)}</td>
+                        <td className="font-bold text-base">Exp.</td>
+                        <td className="text-end pr-2 font-bold text-base">{parseFloat(totalCharge).toFixed(2)}</td>
                     </TableRow>
-                    <TableRow className="border-0">
+                    <TableRow className="border-0 font-bold">
+                        <td></td>
+                        <td className="text-end">Freight</td>
+                        <td className="text-end">{parseFloat(totalFreight).toFixed(2)}</td>
                         <td></td>
                         <td></td>
-                        <td>{totalFreight}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{totalAmount.toFixed(2)}</td>
+                        <td>R/F</td>
+                        <td className="text-end pr-2">{-(parseFloat(totalAmount.toFixed(2)) - (Math.round(parseFloat(totalAmount.toFixed(2))/5)*5)).toFixed(2)}</td>
                     </TableRow>
-                    <TableRow>
+                    <TableRow className="font-bold">
                         <td></td>
+                        <td className="text-end">Labour</td>
+                        <td className="text-end">{parseFloat(totalLabourRate).toFixed(2)}</td>
                         <td></td>
-                        <td>{totalLabourRate}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td colSpan={2} className="font-bold text-base text-end">Net Amount</td>
+                        <td className="border-y border-black font-bold text-base text-end pr-2">{(Math.round(parseFloat(totalAmount.toFixed(2))/5)*5).toFixed(2)}</td>
                     </TableRow>
                 </TableBody>
             </Table>

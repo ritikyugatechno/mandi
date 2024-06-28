@@ -99,10 +99,10 @@ const Print1: React.FC = () => {
         <Button className='ml-auto mr-10' onClick={handlePrint}>
           PRINT
         </Button>
+      </div>
         <div ref={contentToPrint}>
           <SupplierName data={filteredTableData} />
         </div>
-      </div>
     </>
   );
 };

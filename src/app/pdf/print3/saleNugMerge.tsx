@@ -25,15 +25,14 @@ const mergedData = Object.values(data.reduce((acc, currentValue) => {
                 mergedData.map((item: any) => {
                     return (
                         <>
-                    <TableRow >
-                            <td>{item.itemName}</td>
-                            <td>{item.farmerName}</td>
-                            <td>{item.lot}</td>
-                            <td>{item.sNug}</td>
-                            <td>{item.avgWeight}</td>
-                            <td>{parseFloat(item.supplierRate).toFixed(2)}</td>
-                            <td>{(item.bikariAmount / item.sNug).toFixed(2)}</td>
-                            <td>{parseFloat(item.bikariAmount).toFixed(2)}</td>
+                    <TableRow className="border-black border" >
+                            <td className="w-40"></td>
+                            <td className="pl-6 w-20">{item.lot}</td>
+                            <td className="text-end w-20">{item.sNug}</td>
+                            <td className="text-end w-20">{item.avgWeight}</td>
+                            <td className=" text-end w-20">{parseFloat(item.supplierRate).toFixed(2)}</td>
+                            <td className="text-end w-20">{(item.bikariAmount / item.sNug).toFixed(2)}</td>
+                            <td className="text-end w-20 pr-2">{parseFloat(item.bikariAmount).toFixed(2)}</td>
                     </TableRow>
                         </>
                     );

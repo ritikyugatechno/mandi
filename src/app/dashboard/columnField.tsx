@@ -47,7 +47,7 @@ const ColumnArray: string[] = [
   "vclNo",
   "supplierName",
   "farmerName",
-  "typeItem",
+  "cut",
   "sNug",
   "avgWeight",
   "supplierRate",
@@ -61,7 +61,7 @@ const ColumnArray: string[] = [
   "otherCharge",
   "labourRate",
   "weight",
-  "cut",
+  "typeItem",
   "delete",
   "date",
 ];
@@ -72,7 +72,7 @@ const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
 
 const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLButtonElement>, row: Row, column: Column) => {
   keysPressed[e.key] = true;
-  if (e.key === "ArrowDown") {
+  if (e.key === "ArrowDown" || e.key === 'Enter') {
     e.preventDefault();
     const Element = document.querySelector(
       `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`
@@ -126,8 +126,9 @@ const onChangeHandle = (value: any, row: Row, column: Column) => {
 export const InputColumnField = ({ row, column }: { row: Row, column: Column }) => {
   const datas = useSelector((state: RootState) => state.filterDataReducer.datas);
   return (
-    <div className="min-w-3">
+    <div className="">
       <Input
+      className=""
         defaultValue={row.getValue(column.id)}
         value={datas[row.index][column.id]}
         onChange={(e) => onChangeHandle(e.target.value, row, column)}
@@ -135,6 +136,7 @@ export const InputColumnField = ({ row, column }: { row: Row, column: Column }) 
         data-column-name={column.id}
         onKeyUp={(e) => handleKeyUp(e)}
         onKeyDown={(e) => handleKeyDown(e, row, column)}
+        onFocus={(e) => e.target.select()}
       />
     </div>
   );
@@ -151,12 +153,13 @@ export const ComboboxColumnField = ({ row, column }: { row: Row, column: Column 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+
             variant="outline"
             role="combobox"
             data-row-index={row.index}
             data-column-name={column.id}
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="w-fit min-w-full justify-between"
             onKeyUp={(e: any) => handleKeyUp(e)}
             onKeyDown={(e: any) => handleKeyDown(e, row, column)}
           >

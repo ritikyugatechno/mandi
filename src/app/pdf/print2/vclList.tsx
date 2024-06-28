@@ -12,28 +12,29 @@ const VclList = ({ data }) => {
     }, 0)
     return (
         <div className="w-full">
-            <Table>
+            <Table className="">
                 <TableBody className="p-0">
                     {
                         data.map((item) => {
                             return (
                                 <>
                                     <TableRow className="p-0">
-                                        <TableCell className="p-0">{item.basicAmount}</TableCell>
+                                        <TableCell className="p-0 text-end pr-2">{parseFloat(item.basicAmount).toFixed(2)}</TableCell>
                                         <TableCell className="p-0">{item.customerName}</TableCell>
-                                        <TableCell className="p-0">{item.cNug}</TableCell>
-                                        <TableCell className="p-0">{item.netWeight}</TableCell>
-                                        <TableCell className="p-0">{item.customerRate}</TableCell>
+                                        <TableCell className="p-0 text-end">{item.cNug}</TableCell>
+                                        <TableCell className="p-0 text-end">{item.netWeight}</TableCell>
+                                        <TableCell className="p-0 text-end pr-4">{parseFloat(item.customerRate).toFixed(2)}</TableCell>
                                     </TableRow>
                                 </>
                             );
                         })
                     }
-                    <TableRow className="p-0">
-                        <TableCell className="p-0">{totalBasicAmount}</TableCell>
+                    <TableRow className="border-2 border-black"></TableRow>
+                    <TableRow className="p-0 font-bold">
+                        <TableCell className="p-0 text-end pr-2">{parseFloat(totalBasicAmount).toFixed(2)}</TableCell>
                         <TableCell className="p-0">Totol</TableCell>
-                        <TableCell className="p-0">{totalCNug}</TableCell>
-                        <TableCell className="p-0">{totalNetWeight}</TableCell>
+                        <TableCell className="p-0 text-end">{totalCNug}</TableCell>
+                        <TableCell className="p-0 text-end">{totalNetWeight}</TableCell>
                         <TableCell className="p-0"></TableCell>
                     </TableRow>
                 </TableBody>

@@ -7,7 +7,7 @@ const SupplierName = ({ data }) => {
     return (
         <div>
             <div className="text-center">श्री गणेशाय नमः।</div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 p-2">
                 {
                     uniqueSupplier.map((sName: string) => {
                         const supplierNameFilter = data.filter(
@@ -16,7 +16,7 @@ const SupplierName = ({ data }) => {
                         return (
                             <>
                                 <div key={sName}>
-                                    <div> {sName}</div>
+                                    <div className="font-bold pb-1"> {sName}</div>
                                     <FarmerName data={supplierNameFilter} />
                                 </div>
                             </>

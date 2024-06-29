@@ -36,8 +36,12 @@ export default async function handler(
       const grossWeight = weightArray.reduce((accumulator: number, currentValue: string) => accumulator + parseFloat(currentValue), 0);
       const netWeight = grossWeight - (parseFloat(data.cNug) * cut);
       const avgWeight = netWeight / parseFloat(data.cNug) * parseFloat(data.sNug);
-      const basicAmount = netWeight * parseFloat(data.customerRate);
-      const bikariAmount = avgWeight * parseFloat(data.supplierRate);
+      let basicAmount = netWeight * parseFloat(data.customerRate);
+      let bikariAmount = avgWeight * parseFloat(data.supplierRate);
+      if (!grossWeight) {
+        basicAmount = parseFloat(data.cNug) * parseFloat(data.customerRate)
+        bikariAmount = parseFloat(data.sNug) * parseFloat(data.supplierRate)
+      }
 
       let freightTotal = parseFloat(data.freightRate) * parseFloat(data.sNug);
       console.log('freightKg ', data.freightKg)

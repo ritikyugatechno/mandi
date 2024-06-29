@@ -128,7 +128,7 @@ export const InputColumnField = ({ row, column }: { row: Row, column: Column }) 
   return (
     <div className="">
       <Input
-      className=""
+        className=""
         defaultValue={row.getValue(column.id)}
         value={datas[row.index][column.id]}
         onChange={(e) => onChangeHandle(e.target.value, row, column)}
@@ -244,6 +244,41 @@ export const SelectColumnField = ({ row, column }: { row: Row, column: Column })
         <SelectItem value="charat2">Charat2</SelectItem>
         <SelectItem value="charat3">Charat3</SelectItem>
         <SelectItem value="charat4">Charat3</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+};
+
+export const SelectKgColumnField = ({ row, column }: { row: Row, column: Column }) => {
+  const datas = useSelector((state: RootState) => state.filterDataReducer.datas);
+  const thisValue = datas[row.index][column.id] ? 'true' : 'false'
+
+  const valueChange = (e: string) => {
+    let value = false;
+    if (e === 'true') {
+      value = true
+    }
+    onChangeHandle(value, row, column)
+  }
+  return (
+    <Select
+      value={thisValue}
+      onValueChange={(value) => valueChange(value)}
+    >
+      <SelectTrigger
+        data-row-index={row.index}
+        data-column-name={column.id}
+        onKeyUp={(e: any) => handleKeyUp(e)}
+        onKeyDown={(e: any) => handleKeyDown(e, row, column)}
+        className="w-64">
+        <SelectValue
+          defaultValue={thisValue}
+          placeholder="Select an option" />
+      </SelectTrigger>
+      <SelectContent
+      >
+        <SelectItem value="true">Kg</SelectItem>
+        <SelectItem value="false">Nug</SelectItem>
       </SelectContent>
     </Select>
   );

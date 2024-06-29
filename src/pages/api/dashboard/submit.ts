@@ -10,34 +10,15 @@ export default async function handler(
     const deleteData = req.body.delete;
     datas.map(async (data: any) => {
 
-      const weightArray = data.weight.split('+').map(Number)
-      const grossWeight = weightArray.reduce((accumulator: number, currentValue: string) => accumulator + parseFloat(currentValue), 0);
-      const netWeight = grossWeight - (parseFloat(data.cNug) * parseFloat(data.cut));
-      const avgWeight = (netWeight / parseFloat(data.cNug)) * parseFloat(data.sNug);
-      const basicAmount = netWeight * parseFloat(data.customerRate);
-      const bikariAmount = avgWeight * parseFloat(data.supplierRate);
-      let freightTotal = parseFloat(data.freightRate) * parseFloat(data.sNug);
-      if (data.freightKg) {
-        freightTotal = parseFloat(data.freightRate) * parseFloat(grossWeight);
-      }
-      let labourTotal = parseFloat(data.labourRate) * parseFloat(data.sNug);
-      if (data.labourKg) {
-        freightTotal = parseFloat(data.labourRate) * parseFloat(grossWeight);
-      }
-      let otherChargeTotal = (bikariAmount / 100) * data.otherCharge;
       let cut = 0;
       if (data.typeItem == 'box') {
         cut = 1.25;
       } else if (data.typeItem == 'daba') {
         cut = 0.5;
-        freightTotal *= 0.4;
-        labourTotal *= 0.4;
       } else if (data.typeItem == 'peti') {
         cut = 3;
       } else if (data.typeItem == 'plate') {
         cut = 0.25;
-        freightTotal *= 0.5;
-        labourTotal *= 0.5;
       }
       else if (data.typeItem == 'charat1') {
         cut = 1;
@@ -51,6 +32,34 @@ export default async function handler(
       else if (data.typeItem == 'charat4') {
         cut = 0.75;
       }
+      const weightArray = data.weight.split('+').map(Number)
+      const grossWeight = weightArray.reduce((accumulator: number, currentValue: string) => accumulator + parseFloat(currentValue), 0);
+      const netWeight = grossWeight - (parseFloat(data.cNug) * cut);
+      const avgWeight = netWeight / parseFloat(data.cNug) * parseFloat(data.sNug);
+      const basicAmount = netWeight * parseFloat(data.customerRate);
+      const bikariAmount = avgWeight * parseFloat(data.supplierRate);
+
+      let freightTotal = parseFloat(data.freightRate) * parseFloat(data.sNug);
+      console.log('freightKg ', data.freightKg)
+      if (data.freightKg) {
+        freightTotal = parseFloat(data.freightRate) * avgWeight;
+      }
+
+      let labourTotal = parseFloat(data.labourRate) * parseFloat(data.sNug);
+      if (data.labourKg) {
+        labourTotal = parseFloat(data.labourRate) * avgWeight;
+      }
+      let otherChargeTotal = (bikariAmount / 100) * data.otherCharge;
+      if (data.typeItem === 'daba') {
+        freightTotal *= 0.4;
+        labourTotal *= 0.4;
+      }
+      else if (data.typeItem === 'plate') {
+        freightTotal *= 0.5;
+        labourTotal *= 0.5;
+      }
+      console.log(data.typeItem)
+      console.log('freightTotal ', freightTotal)
       const updateData = await prisma.formData.update({
         where: { id: data.id },
         data: {
@@ -70,6 +79,8 @@ export default async function handler(
           freightRate: parseFloat(data.freightRate),
           otherCharge: parseFloat(data.otherCharge),
           labourRate: parseFloat(data.labourRate),
+          freightKg: data.freightKg,
+          labourKg: data.labourKg,
           cut,
           basicAmount,
           bikariAmount,

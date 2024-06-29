@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ComboboxColumnField, DateColumnField, DeleteColumnField, InputColumnField, SelectColumnField } from "./columnField";
+import { ComboboxColumnField, DateColumnField, DeleteColumnField, InputColumnField, SelectColumnField, SelectKgColumnField } from "./columnField";
 
 export type saleData = {
   id: number;
@@ -51,8 +51,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "cut",
     header: "Cut",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -72,8 +72,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "supplierRate",
     header: "Seller Rate",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -83,8 +83,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "customerRate",
     header: "Customer Rate",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -114,8 +114,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "grossWeight",
     header: "Gross Weight",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -125,8 +125,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "freightRate",
     header: "Freight Rate",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -136,8 +136,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "otherCharge",
     header: "Other Charge",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -147,8 +147,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "labourRate",
     header: "Labour Rate",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
@@ -158,8 +158,8 @@ export const columns: ColumnDef<saleData>[] = [
   {
     accessorKey: "weight",
     header: "weight",
-    cell: ({row,column})=>{
-      return(
+    cell: ({ row, column }) => {
+      return (
         <div className="w-96">
           <InputColumnField row={row} column={column} />
         </div>
@@ -180,5 +180,15 @@ export const columns: ColumnDef<saleData>[] = [
     accessorKey: "typeItem",
     header: "Type Item",
     cell: SelectColumnField,
+  },
+  {
+    accessorKey: "freightKg",
+    header: "freightRate Kg",
+    cell: SelectKgColumnField,
+  },
+  {
+    accessorKey: "labourKg",
+    header: "labourRate Kg",
+    cell: SelectKgColumnField,
   },
 ];

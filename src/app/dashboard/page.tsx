@@ -18,7 +18,6 @@ import { columns } from "./column";
 import { cn } from "@/lib/utils";
 import { addNewData } from "./filterDataSlice";
 import { formSubmit } from "./formSubmit";
-import { AnySoaRecord } from "dns";
 
 const GetDataPage = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -48,6 +47,7 @@ const GetDataPage = () => {
   const vclList = [] as any
   let filtered = false;
 
+  debugger
   const filteredTableData = tableData.filter((item: { date: string | number | Date; vclNo: string; }) => {
     const itemDate = new Date(item.date);
     let isDateMatch = isSameDay(itemDate, selectedDate);
@@ -71,7 +71,7 @@ const GetDataPage = () => {
   const uniqueVlcNo = [...new Set(vclList)]
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 bg-white">
       <div className=" flex w-full">
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>

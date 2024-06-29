@@ -17,7 +17,7 @@ const CustomerName = ({ data }) => {
               <div className="flex justify-between">
                 <span className="font-bold">{item.sNug}</span>
                 <span className="flex flex-wrap w-60 text-end justify-end">{weightArray.map((weight) => {
-                  return (<div>{weight}, </div>)
+                  return (<div key={weight} >{weight}, </div>)
                 })}</span>
               </div>
               <div className="flex justify-between border-t-black border-t border-dashed">

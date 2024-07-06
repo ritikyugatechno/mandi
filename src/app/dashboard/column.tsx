@@ -25,6 +25,9 @@ export type saleData = {
   grossWeight: number;
   cut: number;
   date: Date;
+  freightKg:number;
+  labourKg:number;
+
 };
 
 export const columns: ColumnDef<saleData>[] = [

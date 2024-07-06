@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { format, isSameDay } from "date-fns"; // Import isSameDay for date comparison
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -18,23 +18,45 @@ import { columns } from "./column";
 import { cn } from "@/lib/utils";
 import { addNewData } from "./filterDataSlice";
 import { formSubmit } from "./formSubmit";
+import { Input } from "@/components/ui/input";
 
 const GetDataPage = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedVclNo, setSelectedVclNo] = useState<string>('all');
+  const [selectedVclNo, setSelectedVclNo] = useState<string>("all");
+
+  const [totalAvgWeight, setTotalAvgWeight] = useState(0);
 
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.dataReducer.datas);
-  const firstAdd = useSelector((state: RootState) => state.dataReducer.firstAdd);
+  const firstAdd = useSelector(
+    (state: RootState) => state.dataReducer.firstAdd
+  );
 
-  const { data, isLoading, isError } = useFetchSale(selectedDate, selectedVclNo);
+  const { data, isLoading, isError } = useFetchSale(
+    selectedDate,
+    selectedVclNo
+  );
+  useEffect(() => {
+    if (!isLoading && !isError && data.length > 0) {
+      dispatch(addData(data));
+
+      // Calculate the total average weight
+      const initialTotalAvgWeight = 0;
+      const totalWeight = data.reduce(
+        (sum, item) => sum + item.avgWeight,
+        initialTotalAvgWeight
+      );
+      setTotalAvgWeight(totalWeight);
+    }
+  }, [data, isLoading, isError, dispatch]);
+
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
   if (firstAdd) {
     dispatch(addData(data));
   }
-
+  // console.log(data[0].avgWeight);
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -44,31 +66,33 @@ const GetDataPage = () => {
     setSelectedVclNo(event.target.value);
   };
 
-  const vclList = [] as any
+  const vclList = [] as any;
   let filtered = false;
 
-  debugger
-  const filteredTableData = tableData.filter((item: { date: string | number | Date; vclNo: string; }) => {
-    const itemDate = new Date(item.date);
-    let isDateMatch = isSameDay(itemDate, selectedDate);
-    if (isDateMatch) {
-      vclList.push(item.vclNo)
+  debugger;
+  const filteredTableData = tableData.filter(
+    (item: { date: string | number | Date; vclNo: string }) => {
+      const itemDate = new Date(item.date);
+      let isDateMatch = isSameDay(itemDate, selectedDate);
+      if (isDateMatch) {
+        vclList.push(item.vclNo);
+      }
+      let isVclNoMatch = item.vclNo === selectedVclNo ? true : false;
+      if (selectedVclNo === "all") {
+        isDateMatch = true;
+        isVclNoMatch = true;
+      }
+      if (isDateMatch && isVclNoMatch) {
+        filtered = true;
+        return item;
+      }
     }
-    let isVclNoMatch = item.vclNo === selectedVclNo ? true : false;
-    if (selectedVclNo === "all") {
-      isDateMatch = true;
-      isVclNoMatch = true;
-    }
-    if (isDateMatch && isVclNoMatch) {
-      filtered = true;
-      return item
-    }
-  });
+  );
   if (filtered) {
     dispatch(addNewData(filteredTableData));
   }
 
-  const uniqueVlcNo = [...new Set(vclList)]
+  const uniqueVlcNo = [...new Set(vclList)];
 
   return (
     <div className="container mx-auto py-10 bg-white">
@@ -106,10 +130,15 @@ const GetDataPage = () => {
         >
           <option value="all">All</option>
           {uniqueVlcNo.map((data: string) => (
-            <option key={data} value={data}>{data}</option>
+            <option key={data} value={data}>
+              {data}
+            </option>
           ))}
         </select>
-        <Button className="ml-auto" onClick={formSubmit}>Save</Button>
+        <Input value={totalAvgWeight} />
+        <Button className="ml-auto" onClick={formSubmit}>
+          Save
+        </Button>
       </div>
       <DataTable columns={columns} data={filteredTableData} />
     </div>

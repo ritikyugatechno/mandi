@@ -21,6 +21,9 @@ export const dataSlice = createSlice({
       const row = newArray.row;
       const column = newArray.column
       state.datas[row][column] = newArray.value
+    },
+    totalAvgWeight: (state, action) => {
+      
     }
   }
 })

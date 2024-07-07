@@ -326,11 +326,12 @@ export const DateColumnField = ({
   column: Column;
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(row.getValue[column.id]);
-  const handleDateSelect = async (newDate: Date) => {
-    setSelectedDate(newDate);
+  const [selectedDate, setSelectedDate] = useState<Date>(row.getValue(column.id));
+  const handleDateSelect = async (selectedDate: Date) => {
+    console.log("selectedDate", selectedDate);
+    setSelectedDate(selectedDate);
     setIsPopoverOpen(false);
-    onChangeHandle(newDate, row, column);
+    onChangeHandle(selectedDate, row, column);
   };
   return (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>

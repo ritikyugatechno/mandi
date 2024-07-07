@@ -61,9 +61,9 @@ const GetDataPage = () => {
   const filteredTableData = tableData.filter(
     (item: { date: string | number | Date; vclNo: string }) => {
       const itemDate = new Date(item.date);
-      console.log("itemDate", itemDate);
+    
       let isDateMatch = isSameDay(itemDate, selectedDate);
-      console.log("isDateMatch", isDateMatch);
+      
       if (isDateMatch) {
         vclList.push(item.vclNo);
       }

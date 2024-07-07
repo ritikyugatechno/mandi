@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { fieldType, formData, formName, NextSelect } from "./form/formData";
+import { NextSelect, fieldType, formData, formName } from "./form/formData";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -29,45 +29,19 @@ import {
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { formSubmit } from "../dashboard/formSubmit";
-import { updateEntry } from "./data/entrySlice";
+import { addEntry, updateEntry } from "./data/entrySlice";
 import { useAppDispatch, useAppSelector } from "./data/hooks";
-import { useFetchListOfNames } from "./data/query";
+import { useFetchListOfNames, useGetLastEntry } from "./data/query";
 import { addWeight, updataWeight } from "./data/weightSlice";
-import { keyboardShortcut, keyDownDataSelect } from "./keyboardShortcut";
+import { keyDownDataSelect, keyboardShortcut } from "./keyboardShortcut";
 
 const Entry = () => {
+  const dispatch = useAppDispatch();
+  const { data: FirstEntry, isLoading: isLoadingFirstEntry, isError: isErrorFirstEntry } = useGetLastEntry();
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const formRef = useRef<HTMLFormElement>(null);
-  const dispatch = useAppDispatch();
   const [date, setDate] = React.useState<Date>();
-  const setNewDate = (e: Date, fieldName: formName) => {
-    setDate(e)
-    dispatch(updateEntry({ name: fieldName, value: e.toString() }))
-  }
-
-  const doNothingEnter = (e: { key: string; preventDefault: () => void; }) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-    }
-  }
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.altKey &&
-        event.key === 's'
-      ) {
-        event.preventDefault();
-        formSubmit(event, false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
   const [isFocused, setIsFocused] = useState({
     supplierName: false,
     farmerName: false,
@@ -84,6 +58,40 @@ const Entry = () => {
     freightKg: false,
     labourKg: false,
   });
+
+  const { data, isError, isLoading } = useFetchListOfNames();
+
+  useEffect(() => {
+    if (!(isLoadingFirstEntry || isErrorFirstEntry)) {
+      dispatch(addEntry(FirstEntry))
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.altKey &&
+        event.key === 's'
+      ) {
+        event.preventDefault();
+        formSubmit(event, false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLoadingFirstEntry, isErrorFirstEntry]);
+  console.log(FirstEntry)
+
+  const setNewDate = (e: Date, fieldName: formName) => {
+    setDate(e)
+    dispatch(updateEntry({ name: fieldName, value: e.toString() }))
+  }
+
+  const doNothingEnter = (e: { key: string; preventDefault: () => void; }) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+    }
+  }
 
   const handleFocus = (name: string) => {
     setIsFocused((prevState) => ({
@@ -103,13 +111,13 @@ const Entry = () => {
       [name]: false,
     }));
   };
-  const { data, isError, isLoading } = useFetchListOfNames();
-  if (isLoading) {
+  if (isLoading || isLoadingFirstEntry) {
     return <div>Loading...</div>;
   }
-  if (isError) {
+  if (isError || isErrorFirstEntry) {
     return <div>Error loading data</div>;
   }
+
   keyboardShortcut()
 
   return (
@@ -120,7 +128,7 @@ const Entry = () => {
             (field) =>
               field.fieldType === fieldType.input ? (
                 <>
-                  <div className="flex flex-col gap-1">
+                  <div key={field.name} className="flex flex-col gap-1">
                     <Label>{field.name}</Label>
                     <Input
                       data-key='tab'
@@ -141,7 +149,7 @@ const Entry = () => {
                   </div>
                 </>
               ) : field.fieldType === fieldType.commandInput ? (
-                <div className="flex flex-col gap-1">
+                <div key={field.name} className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   <Command
                     className="rounded-lg border w-fit shadow-md relative overflow-visible"
@@ -150,7 +158,10 @@ const Entry = () => {
                       data-key='tab'
                       className={`${field.className}`}
                       placeholder="Type ..."
-                      onFocus={() => handleFocus(field.name)}
+                      onFocus={(e) => {
+                        handleFocus(field.name)
+                        e.target.select()
+                      }}
                       onBlur={() => handleBlur(field.name)}
                       value={entryData[field.name]}
                       onValueChange={
@@ -181,7 +192,7 @@ const Entry = () => {
                   </Command>
                 </div>
               ) : field.fieldType === fieldType.selectInput ? (
-                <div className="flex flex-col gap-1">
+                <div key={field.name} className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   <Select
                     onValueChange={(value) => {
@@ -213,7 +224,7 @@ const Entry = () => {
                   </Select>
                 </div>
               ) : field.fieldType === fieldType.datePicker ? (
-                <div className="flex flex-col gap-1">
+                <div key={field.name} className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   <Popover>
                     <PopoverTrigger
@@ -246,7 +257,7 @@ const Entry = () => {
                   </Popover>
                 </div>
               ) : field.fieldType === fieldType.weightInput ? (
-                <div className='w-full flex gap-4 justify-center' >
+                <div key={field.name} className='w-full flex gap-4 justify-center' >
                   <div className="w-[750px] flex flex-wrap gap-4 justify-center">
                     {weight.map((_: string, index: number) => (
                       <>
@@ -267,7 +278,7 @@ const Entry = () => {
                   <Button onClick={handleAddWeight} >Add Weigth</Button>
                 </div>
               ) : field.fieldType === fieldType.selectInputKg ? (
-                <div className="flex flex-col gap-1">
+                <div key={field.name} className="flex flex-col gap-1">
                   <Label>{field.name}</Label>
                   <Select
                     onValueChange={(value) => dispatch(updateEntry({ name: field.name, value: value }))}
@@ -293,7 +304,6 @@ const Entry = () => {
           <Button
             data-key='tab'
             type="submit">Save</Button>
-
         </div>
       </form >
     </>

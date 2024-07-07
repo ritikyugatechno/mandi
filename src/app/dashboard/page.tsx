@@ -25,8 +25,6 @@ const GetDataPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedVclNo, setSelectedVclNo] = useState<string>("all");
 
-  const [totalAvgWeight, setTotalAvgWeight] = useState(0);
-
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.dataReducer.datas);
   const firstAdd = useSelector(
@@ -37,19 +35,6 @@ const GetDataPage = () => {
     selectedDate,
     selectedVclNo
   );
-  useEffect(() => {
-    if (!isLoading && !isError && data.length > 0) {
-      dispatch(addData(data));
-
-      // Calculate the total average weight
-      const initialTotalAvgWeight = 0;
-      const totalWeight = data.reduce(
-        (sum, item) => sum + item.avgWeight,
-        initialTotalAvgWeight
-      );
-      setTotalAvgWeight(totalWeight);
-    }
-  }, [data, isLoading, isError, dispatch]);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
@@ -68,12 +53,17 @@ const GetDataPage = () => {
 
   const vclList = [] as any;
   let filtered = false;
+  let totalAvgWeight = 0;
+  let totalNetWeight = 0;
+  let totalCnug = 0;
+  let totalSnug = 0;
 
-  debugger;
   const filteredTableData = tableData.filter(
     (item: { date: string | number | Date; vclNo: string }) => {
       const itemDate = new Date(item.date);
+      console.log("itemDate", itemDate);
       let isDateMatch = isSameDay(itemDate, selectedDate);
+      console.log("isDateMatch", isDateMatch);
       if (isDateMatch) {
         vclList.push(item.vclNo);
       }
@@ -84,7 +74,13 @@ const GetDataPage = () => {
       }
       if (isDateMatch && isVclNoMatch) {
         filtered = true;
-        return item;
+        // console.log(item);
+        
+        totalAvgWeight += item.avgWeight;
+        totalNetWeight += item.netWeight;
+        totalCnug += item.cNug;
+        totalSnug += item.sNug;
+        return item; //avgweight
       }
     }
   );
@@ -135,7 +131,10 @@ const GetDataPage = () => {
             </option>
           ))}
         </select>
-        <Input value={totalAvgWeight} />
+        <Input value={totalAvgWeight} readOnly />
+        <Input value={totalNetWeight} readOnly />
+        <Input value={totalCnug} readOnly />
+        <Input value={totalSnug} readOnly />
         <Button className="ml-auto" onClick={formSubmit}>
           Save
         </Button>

@@ -67,6 +67,9 @@ const ColumnArray: string[] = [
   "typeItem",
   "freightKg",
   "labourKg",
+  "freightTotal",
+  "labourTotal",
+  "otherChargeTotal",
 ];
 
 const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {

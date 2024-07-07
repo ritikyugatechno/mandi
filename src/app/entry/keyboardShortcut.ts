@@ -20,7 +20,7 @@ export const keyDownDataSelect = (event: React.KeyboardEvent<HTMLElement>) => {
     if (selectInput && event.key === 'Enter') {
       setTimeout(() => {
         selectInput.focus();
-      }, 500)
+      }, 100)
     }
   }
 }

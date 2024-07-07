@@ -103,8 +103,7 @@ const handleKeyDown = (
     const columnIndex = ColumnArray.indexOf(column.id);
     if (ColumnArray.length - 1 >= columnIndex) {
       const Element = document.querySelector(
-        `[data-row-index='${row.index}'][data-column-name='${
-          ColumnArray[columnIndex - 1]
+        `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex - 1]
         }']`
       ) as HTMLElement;
       if (Element) {
@@ -116,8 +115,7 @@ const handleKeyDown = (
     const columnIndex = ColumnArray.indexOf(column.id);
     if (0 <= columnIndex) {
       const Element = document.querySelector(
-        `[data-row-index='${row.index}'][data-column-name='${
-          ColumnArray[columnIndex + 1]
+        `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex + 1]
         }']`
       ) as HTMLElement;
       if (Element) {
@@ -328,7 +326,7 @@ export const DateColumnField = ({
   column: Column;
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(row.getValue[column.id]);
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
     setIsPopoverOpen(false);

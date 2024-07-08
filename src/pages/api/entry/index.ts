@@ -51,7 +51,7 @@ export default async function handler(
     const avgWeight = netWeight;
     const removeZeroWeight = data.weight.filter(e => parseInt(e) !== 0)
     const weight = removeZeroWeight.join("+")
-    await prisma.formData.create(
+    const response = await prisma.formData.create(
       {
         data: {
           serialNo: parseInt(data.serialNo),
@@ -85,6 +85,9 @@ export default async function handler(
         }
       }
     )
+    if (!response) {
+      throw new Error('someThing went wrong')
+    }
     return res.status(200).json({ success: true });
   }
   else {

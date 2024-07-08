@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { formSubmit } from "../dashboard/formSubmit";
+import { formSubmit } from "./form/formSubmit";
 import { addEntry, updateEntry } from "./data/entrySlice";
 import { useAppDispatch, useAppSelector } from "./data/hooks";
 import { useFetchListOfNames, useGetLastEntry } from "./data/query";
@@ -80,7 +80,6 @@ const Entry = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isLoadingFirstEntry, isErrorFirstEntry]);
-  console.log(FirstEntry)
 
   const setNewDate = (e: Date, fieldName: formName) => {
     setDate(e)

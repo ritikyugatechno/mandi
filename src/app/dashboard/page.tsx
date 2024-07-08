@@ -76,7 +76,7 @@ const GetDataPage = () => {
         filtered = true;
         // console.log(item);
         
-        totalAvgWeight += item.avgWeight;
+        totalAvgWeight += Number(item.avgWeight);
         totalNetWeight += item.netWeight;
         totalCnug += item.cNug;
         totalSnug += item.sNug;

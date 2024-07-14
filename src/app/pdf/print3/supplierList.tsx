@@ -2,11 +2,11 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import LotFilter from "./lotFilter";
 
 const SupplierList = ({ data, srNo }) => {
-  console.log("data", data);
+
   const allTotalOtherChargeFromData = data.map((item) => {
     return parseFloat(item.otherChargeTotal);
-  })
-  console.log("allTotalOtherChargeFromData", allTotalOtherChargeFromData);
+  });
+  
 
   const uniqueSupplier = [
     ...new Set(data.map((item) => item.supplierName)),
@@ -34,7 +34,6 @@ const SupplierList = ({ data, srNo }) => {
   // console.log("totalCharge" , totalCharge)
   // console.log("totalOtherCharge", totalOtherCharge);
   const totalAmount = totalBasicAmount - totalCharge;
-
 
   const totalSNug = data.reduce((accumulator, currentValue) => {
     return accumulator + parseFloat(currentValue.sNug);

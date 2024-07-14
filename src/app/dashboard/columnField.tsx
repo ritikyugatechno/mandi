@@ -326,7 +326,8 @@ export const DateColumnField = ({
   column: Column;
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(row.getValue(column.id));
+  const initialDate = new Date(row.getValue(column.id));
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const handleDateSelect = async (selectedDate: Date) => {
     console.log("selectedDate", selectedDate);
     setSelectedDate(selectedDate);

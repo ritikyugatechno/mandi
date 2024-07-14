@@ -59,11 +59,18 @@ const GetDataPage = () => {
   let totalSnug = 0;
 
   const filteredTableData = tableData.filter(
-    (item: { date: string | number | Date; vclNo: string }) => {
+    (item: {
+      avgWeight: any;
+      netWeight: number;
+      cNug: number;
+      sNug: number;
+      date: string | number | Date;
+      vclNo: string;
+    }) => {
       const itemDate = new Date(item.date);
-    
+
       let isDateMatch = isSameDay(itemDate, selectedDate);
-      
+
       if (isDateMatch) {
         vclList.push(item.vclNo);
       }
@@ -75,8 +82,8 @@ const GetDataPage = () => {
       if (isDateMatch && isVclNoMatch) {
         filtered = true;
         // console.log(item);
-        
-        totalAvgWeight += Number(item.avgWeight);
+
+        totalAvgWeight += item.avgWeight as any;
         totalNetWeight += item.netWeight;
         totalCnug += item.cNug;
         totalSnug += item.sNug;
@@ -92,7 +99,7 @@ const GetDataPage = () => {
 
   return (
     <div className="container mx-auto py-10 bg-white">
-      <div className=" flex w-full">
+      <div className=" flex w-full items-center">
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -131,14 +138,29 @@ const GetDataPage = () => {
             </option>
           ))}
         </select>
-        <Input value={totalAvgWeight} readOnly />
-        <Input value={totalNetWeight} readOnly />
-        <Input value={totalCnug} readOnly />
-        <Input value={totalSnug} readOnly />
-        <Button className="ml-auto" onClick={formSubmit}>
+        <div className="flex mb-6">
+          <div className="ml-4">
+            <label>Total Avg Weight</label>
+            <Input value={totalAvgWeight} readOnly />
+          </div>
+          <div className="ml-4">
+            <label>Total Net Weight</label>
+            <Input value={totalNetWeight} readOnly />
+          </div>
+          <div className="ml-4">
+            <label>Total CNug</label>
+            <Input value={totalCnug} readOnly />
+          </div>
+          <div className="ml-4 mr-2">
+            <label>Total SNug</label>
+            <Input value={totalSnug} readOnly />
+          </div>
+        </div>
+        <Button className="ml-auto h" onClick={formSubmit}>
           Save
         </Button>
       </div>
+
       <DataTable columns={columns} data={filteredTableData} />
     </div>
   );

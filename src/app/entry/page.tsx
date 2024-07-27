@@ -118,13 +118,6 @@ const Entry = () => {
     return <div>Error loading data</div>;
   }
 
-  console.log(entryData)
-  console.log('-----------------hello-----------------')
-  console.log(date);
-
-  if (!date) {
-    setDate(entryData['date'])
-  }
   keyboardShortcut()
 
   return (

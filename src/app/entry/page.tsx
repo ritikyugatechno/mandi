@@ -302,6 +302,7 @@ const Entry = () => {
               ) : null
           )}
           <Button
+            data-key='tab'
             type="submit">Save</Button>
         </div>
       </form >

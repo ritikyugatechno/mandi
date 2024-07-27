@@ -5,8 +5,6 @@ export const keyboardShortcut = () => {
       if (e.key == 'Enter') {
         if (allInput.length > index + 1) {
           allInput[index + 1].focus();
-        } else {
-          allInput[0].focus();
         }
       }
     })

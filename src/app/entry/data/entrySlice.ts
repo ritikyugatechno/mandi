@@ -23,16 +23,24 @@ export const entrySlice = createSlice({
   name: 'data',
   initialState,
   reducers: {
+    addEntry: (state, action) => {
+      Object.keys(state).forEach(key => {
+        state[key] = action.payload[key];
+      })
+      // state.supplierName = action.payload.supplierName;
+      // state.farmerName = action.payload.farmerName;
+
+    },
     updateEntry: (state, action) => {
       const array = action.payload as { name: formName, value: string };
       state[array.name] = array.value;
     },
-    resetEntry: (state)=>{
+    resetEntry: (state) => {
       state['serialNo'] = (parseInt(state['serialNo']) + 1) + '';
     }
   }
 })
 
-export const { updateEntry, resetEntry } = entrySlice.actions
+export const { addEntry, updateEntry, resetEntry } = entrySlice.actions
 
 export default entrySlice.reducer

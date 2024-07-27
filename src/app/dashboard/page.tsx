@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { format, isSameDay } from "date-fns"; // Import isSameDay for date comparison
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -18,23 +18,30 @@ import { columns } from "./column";
 import { cn } from "@/lib/utils";
 import { addNewData } from "./filterDataSlice";
 import { formSubmit } from "./formSubmit";
+import { Input } from "@/components/ui/input";
 
 const GetDataPage = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedVclNo, setSelectedVclNo] = useState<string>('all');
+  const [selectedVclNo, setSelectedVclNo] = useState<string>("all");
 
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.dataReducer.datas);
-  const firstAdd = useSelector((state: RootState) => state.dataReducer.firstAdd);
+  const firstAdd = useSelector(
+    (state: RootState) => state.dataReducer.firstAdd
+  );
 
-  const { data, isLoading, isError } = useFetchSale(selectedDate, selectedVclNo);
+  const { data, isLoading, isError } = useFetchSale(
+    selectedDate,
+    selectedVclNo
+  );
+
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {isError} </p>;
   if (firstAdd) {
     dispatch(addData(data));
   }
-
+  // console.log(data[0].avgWeight);
 
   const handleDateSelect = async (newDate: Date) => {
     setSelectedDate(newDate);
@@ -44,35 +51,55 @@ const GetDataPage = () => {
     setSelectedVclNo(event.target.value);
   };
 
-  const vclList = [] as any
+  const vclList = [] as any;
   let filtered = false;
+  let totalAvgWeight = 0;
+  let totalNetWeight = 0;
+  let totalCnug = 0;
+  let totalSnug = 0;
 
-  debugger
-  const filteredTableData = tableData.filter((item: { date: string | number | Date; vclNo: string; }) => {
-    const itemDate = new Date(item.date);
-    let isDateMatch = isSameDay(itemDate, selectedDate);
-    if (isDateMatch) {
-      vclList.push(item.vclNo)
+  const filteredTableData = tableData.filter(
+    (item: {
+      avgWeight: any;
+      netWeight: number;
+      cNug: number;
+      sNug: number;
+      date: string | number | Date;
+      vclNo: string;
+    }) => {
+      const itemDate = new Date(item.date);
+
+      let isDateMatch = isSameDay(itemDate, selectedDate);
+
+      if (isDateMatch) {
+        vclList.push(item.vclNo);
+      }
+      let isVclNoMatch = item.vclNo === selectedVclNo ? true : false;
+      if (selectedVclNo === "all") {
+        isDateMatch = true;
+        isVclNoMatch = true;
+      }
+      if (isDateMatch && isVclNoMatch) {
+        filtered = true;
+        // console.log(item);
+
+        totalAvgWeight += item.avgWeight as any;
+        totalNetWeight += item.netWeight;
+        totalCnug += item.cNug;
+        totalSnug += item.sNug;
+        return item; //avgweight
+      }
     }
-    let isVclNoMatch = item.vclNo === selectedVclNo ? true : false;
-    if (selectedVclNo === "all") {
-      isDateMatch = true;
-      isVclNoMatch = true;
-    }
-    if (isDateMatch && isVclNoMatch) {
-      filtered = true;
-      return item
-    }
-  });
+  );
   if (filtered) {
     dispatch(addNewData(filteredTableData));
   }
 
-  const uniqueVlcNo = [...new Set(vclList)]
+  const uniqueVlcNo = [...new Set(vclList)];
 
   return (
     <div className="container mx-auto py-10 bg-white">
-      <div className=" flex w-full">
+      <div className=" flex w-full items-center">
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -106,11 +133,34 @@ const GetDataPage = () => {
         >
           <option value="all">All</option>
           {uniqueVlcNo.map((data: string) => (
-            <option key={data} value={data}>{data}</option>
+            <option key={data} value={data}>
+              {data}
+            </option>
           ))}
         </select>
-        <Button className="ml-auto" onClick={formSubmit}>Save</Button>
+        <div className="flex mb-6">
+          <div className="ml-4">
+            <label>Total Avg Weight</label>
+            <Input value={totalAvgWeight} readOnly />
+          </div>
+          <div className="ml-4">
+            <label>Total Net Weight</label>
+            <Input value={totalNetWeight} readOnly />
+          </div>
+          <div className="ml-4">
+            <label>Total CNug</label>
+            <Input value={totalCnug} readOnly />
+          </div>
+          <div className="ml-4 mr-2">
+            <label>Total SNug</label>
+            <Input value={totalSnug} readOnly />
+          </div>
+        </div>
+        <Button className="ml-auto h" onClick={formSubmit}>
+          Save
+        </Button>
       </div>
+
       <DataTable columns={columns} data={filteredTableData} />
     </div>
   );

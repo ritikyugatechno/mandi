@@ -1,12 +1,12 @@
-'use client'
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+"use client";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
   firstAdd: true,
-  datas: [] as any
-}
+  datas: [] as any,
+};
 export const dataSlice = createSlice({
-  name: 'data',
+  name: "data",
   initialState,
   reducers: {
     addData: (state, action) => {
@@ -17,14 +17,14 @@ export const dataSlice = createSlice({
       // state.datas = state.todos.filter((todo) => todo.id !== action.payload)
     },
     updataData: (state, action) => {
-      const newArray = action.payload
+      const newArray = action.payload;
       const row = newArray.row;
-      const column = newArray.column
-      state.datas[row][column] = newArray.value
-    }
-  }
-})
+      const column = newArray.column;
+      state.datas[row][column] = newArray.value;
+    },
+  },
+});
 
-export const { addData, removeData, updataData } = dataSlice.actions
+export const { addData, removeData, updataData } = dataSlice.actions;
 
-export default dataSlice.reducer
+export default dataSlice.reducer;

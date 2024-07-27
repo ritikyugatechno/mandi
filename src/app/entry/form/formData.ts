@@ -27,7 +27,7 @@ export enum fieldType {
 }
 
 export enum NextSelect {
-  typeItem =  'typeItem',
+  typeItem = 'typeItem',
   freightKg = 'freightKg',
   labourKg = 'labourKg'
 }
@@ -140,21 +140,24 @@ export const formData: formDataType = [
   },
   {
     fieldType: fieldType.input,
-    name: formName.otherCharge,
-    // className: 'w-40',
-    type: 'number',
-    placeholder: 'Enter otherCharge',
-  },
-  {
-    fieldType: fieldType.input,
     name: formName.labourRate,
     type: 'number',
     placeholder: 'Enter labourRate',
+    dataKey: NextSelect.freightKg,
   },
   {
     fieldType: fieldType.selectInputKg,
     name: formName.labourKg,
     type: 'number',
     placeholder: 'Enter labourKgNug',
+    dataKey: NextSelect.labourKg,
+  },
+  {
+    fieldType: fieldType.input,
+    name: formName.otherCharge,
+    // className: 'w-40',
+    type: 'number',
+    placeholder: 'Enter otherCharge',
+    dataKey: NextSelect.labourKg,
   },
 ]

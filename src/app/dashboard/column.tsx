@@ -25,6 +25,12 @@ export type saleData = {
   grossWeight: number;
   cut: number;
   date: Date;
+  freightKg:number;
+  labourKg:number;
+  freightTotal:number;
+  labourTotal:number;
+  otherChargeTotal:number;
+
 };
 
 export const columns: ColumnDef<saleData>[] = [
@@ -191,4 +197,37 @@ export const columns: ColumnDef<saleData>[] = [
     header: "labourRate Kg",
     cell: SelectKgColumnField,
   },
+  {
+    accessorKey: "freightTotal",
+    header: "Freight Total",
+    cell: ({ row, column }) => {
+      return (
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "labourTotal",
+    header: "Labour Total",
+    cell: ({ row, column }) => {
+      return (
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "otherChargeTotal",
+    header: "Other Charge Total",
+    cell: ({ row, column }) => {
+      return (
+        <div className="min-w-12">
+          <InputColumnField row={row} column={column} />
+        </div>
+      )
+    },
+  }
 ];

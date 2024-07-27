@@ -1,6 +1,5 @@
 import prisma from "@/lib/prismaClient";
 import { NextApiRequest, NextApiResponse } from "next";
-import { number } from "zod";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,48 +13,48 @@ export default async function handler(
     const data = req.body;
     let grossWeight: number = 0;
     let cut = 0;
-    if(data.typeItem == 'box'){
+    if (data.typeItem == 'box') {
       cut = 1.25;
-    }else if(data.typeItem == 'daba'){
+    } else if (data.typeItem == 'daba') {
       cut = 0.5;
-    }else if(data.typeItem == 'peti'){
+    } else if (data.typeItem == 'peti') {
       cut = 3;
-    }else if(data.typeItem == 'plate'){
+    } else if (data.typeItem == 'plate') {
       cut = 0.25;
     }
-    else if(data.typeItem == 'charat1'){
+    else if (data.typeItem == 'charat1') {
       cut = 1;
     }
-    else if(data.typeItem == 'charat2'){
+    else if (data.typeItem == 'charat2') {
       cut = 2;
     }
-    else if(data.typeItem == 'charat3'){
+    else if (data.typeItem == 'charat3') {
       cut = 1.5;
     }
-    else if(data.typeItem == 'charat4'){
+    else if (data.typeItem == 'charat4') {
       cut = 0.75;
     }
 
     let labourKg = false;
-    if(data.labourKg === "true"){
+    if (data.labourKg === "true") {
       labourKg = true;
     }
     let freightKg = false;
-    if(data.freightKg === "true"){
+    if (data.freightKg === "true") {
       freightKg = true;
     }
 
-    data.weight.map((w:string) => {
+    data.weight.map((w: string) => {
       grossWeight = grossWeight + parseFloat(w)
     })
     const netWeight = grossWeight - (parseFloat(data.nug) * cut)
     const avgWeight = netWeight;
     const removeZeroWeight = data.weight.filter(e => parseInt(e) !== 0)
     const weight = removeZeroWeight.join("+")
-    await prisma.formData.create(
+    const response = await prisma.formData.create(
       {
         data: {
-          serialNo : parseInt(data.serialNo),
+          serialNo: parseInt(data.serialNo),
           supplierName: data.supplierName,
           farmerName: data.farmerName,
           cNug: parseInt(data.nug),
@@ -71,11 +70,11 @@ export default async function handler(
           labourRate: parseFloat(data.labourRate),
           supplierRate: 0,
           customerRate: 0,
-          basicAmount:0,
+          basicAmount: 0,
           bikariAmount: 0,
-          freightTotal:0,
-          labourTotal:0,
-          otherChargeTotal:0,
+          freightTotal: 0,
+          labourTotal: 0,
+          otherChargeTotal: 0,
           freightKg,
           labourKg,
           weight,
@@ -86,6 +85,9 @@ export default async function handler(
         }
       }
     )
+    if (!response) {
+      throw new Error('someThing went wrong')
+    }
     return res.status(200).json({ success: true });
   }
   else {

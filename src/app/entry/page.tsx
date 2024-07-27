@@ -41,7 +41,7 @@ const Entry = () => {
   const entryData = useAppSelector((state) => state.entryReducer)
   const weight = useAppSelector((state) => state.weightReducer.weight)
   const formRef = useRef<HTMLFormElement>(null);
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<any>();
   const [isFocused, setIsFocused] = useState({
     supplierName: false,
     farmerName: false,
@@ -64,6 +64,7 @@ const Entry = () => {
   useEffect(() => {
     if (!(isLoadingFirstEntry || isErrorFirstEntry)) {
       dispatch(addEntry(FirstEntry))
+      // setDate(entryData['date'])
     }
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -117,6 +118,13 @@ const Entry = () => {
     return <div>Error loading data</div>;
   }
 
+  console.log(entryData)
+  console.log('-----------------hello-----------------')
+  console.log(date);
+
+  if (!date) {
+    setDate(entryData['date'])
+  }
   keyboardShortcut()
 
   return (
@@ -301,7 +309,6 @@ const Entry = () => {
               ) : null
           )}
           <Button
-            data-key='tab'
             type="submit">Save</Button>
         </div>
       </form >

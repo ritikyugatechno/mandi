@@ -174,8 +174,13 @@ export const ComboboxColumnField = ({
   );
   const allData = useSelector((state: RootState) => state.dataReducer.datas);
   const dataList = [...new Set(allData.map((item: any) => item[column.id]))];
+  console.log("Datalist -------",dataList);
+  
   const [open, setOpen] = useState(false);
   const thisValue = datas[row.index][column.id];
+
+  console.log("--------This -------", thisValue);
+  
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>

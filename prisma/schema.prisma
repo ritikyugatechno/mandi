@@ -41,3 +41,10 @@ model FormData {
   netWeight Float?
   weight String?
 }
+
+model Image {
+  id Int @id @default(autoincrement())
+  name String
+  date String
+  vehicleNumber String
+}

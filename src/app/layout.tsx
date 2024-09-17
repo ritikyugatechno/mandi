@@ -20,20 +20,17 @@ export default function RootLayout({
     <html className="" lang="en">
       <body className={`${inter.className} bg-gray-600`}>
         <nav className="flex justify-center gap-4 mt-2">
-          <a href={'/entry'}>
-            <Button variant={"outline"}>
-              Entry
-            </Button>
+          <a href={"/entry"}>
+            <Button variant={"outline"}>Entry</Button>
           </a>
-          <a href={'/dashboard'}>
-            <Button variant={'outline'}>
-              Dashboard
-            </Button>
+          <a href={"/dashboard"}>
+            <Button variant={"outline"}>Dashboard</Button>
           </a>
-          <a href={'/pdf/print1'}>
-            <Button variant={'outline'}>
-              Print
-            </Button>
+          <a href={"/pdf/print1"}>
+            <Button variant={"outline"}>Print</Button>
+          </a>
+          <a href={"/uploadandgetimage"}>
+            <Button variant={"outline"}>Upload/Search</Button>
           </a>
         </nav>
         {children}

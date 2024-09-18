@@ -1,7 +1,7 @@
-'use client'
+"use client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../queryClient";
-import { Provider } from 'react-redux'
+import { Provider } from "react-redux";
 import { store } from "./store";
 import useKeyboardShortcut from "../useKeyboardShortcut";
 import { useEffect } from "react";
@@ -20,25 +20,21 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.altKey &&
-        event.key === 's'
-      ) {
-          event.preventDefault();
-          formSubmit(event, false);
-        }
+      if (event.altKey && event.key === "s") {
+        event.preventDefault();
+        formSubmit(event, false);
+      }
     };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        {children}
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </QueryClientProvider>
   );
 }

@@ -84,44 +84,52 @@ const handleKeyDown = (
   keysPressed[e.key] = true;
   if (e.key === "ArrowDown" || e.key === "Enter") {
     e.preventDefault();
+   if(typeof window !== "undefined"){
     const Element = document.querySelector(
       `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`
     ) as HTMLElement;
     if (Element) {
       Element.focus();
     }
+   }
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    const Element = document.querySelector(
-      `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
-    ) as HTMLElement;
-    if (Element) {
-      Element.focus();
+    if(typeof window !== "undefined"){
+      const Element = document.querySelector(
+        `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
+      ) as HTMLElement;
+      if (Element) {
+        Element.focus();
+      }
     }
   } else if (e.key === "ArrowLeft") {
     e.preventDefault();
     const columnIndex = ColumnArray.indexOf(column.id);
     if (ColumnArray.length - 1 >= columnIndex) {
-      const Element = document.querySelector(
-        `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex - 1]
-        }']`
-      ) as HTMLElement;
-      if (Element) {
-        Element.focus();
+      if(typeof window !== "undefined"){
+        const Element = document.querySelector(
+          `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex - 1]
+          }']`
+        ) as HTMLElement;
+        if (Element) {
+          Element.focus();
+        }
       }
     }
   } else if (e.key === "ArrowRight") {
     e.preventDefault();
     const columnIndex = ColumnArray.indexOf(column.id);
     if (0 <= columnIndex) {
-      const Element = document.querySelector(
-        `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex + 1]
-        }']`
-      ) as HTMLElement;
-      if (Element) {
-        Element.focus();
+      if( typeof window !== "undefined"){
+        const Element = document.querySelector(
+          `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex + 1]
+          }']`
+        ) as HTMLElement;
+        if (Element) {
+          Element.focus();
+        }
       }
-    }
+      }
   }
 };
 

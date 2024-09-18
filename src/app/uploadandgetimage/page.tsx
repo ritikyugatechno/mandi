@@ -74,7 +74,7 @@ export default function ImageManager() {
       return;
     }
     try {
-      const response = await axios.get(
+      const response = await axios.post(
         `/api/getimage?date=${date}&vehicleNumber=${vehicleNumber}`
       );
       const { image } = response.data;

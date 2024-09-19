@@ -25,7 +25,7 @@ export const entrySlice = createSlice({
   reducers: {
     addEntry: (state, action) => {
       Object.keys(state).forEach((key) => {
-        state[key] = action.payload[key];
+        state[key] = action.payload ? action.payload[key] : "";
       });
       // state.supplierName = action.payload.supplierName;
       // state.farmerName = action.payload.farmerName;

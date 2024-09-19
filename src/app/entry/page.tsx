@@ -121,6 +121,9 @@ const Entry = () => {
   if (isError || isErrorFirstEntry) {
     return <div>Error loading data</div>;
   }
+  function isObject(value: unknown): value is object {
+    return typeof value === "object" && value !== null;
+  }
 
   keyboardShortcut();
 
@@ -145,7 +148,10 @@ const Entry = () => {
                     value={entryData[field.name]}
                     onChange={(e) =>
                       dispatch(
-                        updateEntry({ name: field.name, value: e.target.value })
+                        updateEntry({
+                          name: field.name,
+                          value: e.target.value,
+                        }),
                       )
                     }
                     required
@@ -174,7 +180,7 @@ const Entry = () => {
                         updateEntry({
                           name: field.name,
                           value: e,
-                        })
+                        }),
                       )
                     }
                   />
@@ -191,7 +197,7 @@ const Entry = () => {
                             key={index}
                             onSelect={(e) => {
                               dispatch(
-                                updateEntry({ name: field.name, value: e })
+                                updateEntry({ name: field.name, value: e }),
                               );
                             }}
                           >
@@ -294,13 +300,16 @@ const Entry = () => {
                       variant={"outline"}
                       className={cn(
                         "w-[280px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
+                        !date && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date
                         ? format(date, "PPP")
-                        : format(entryData[field.name], "PPP")}
+                        : isObject(entryData[field.name]) &&
+                            (entryData[field.name] as object) instanceof Date
+                          ? format(entryData[field.name], "PPP")
+                          : ""}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -335,7 +344,7 @@ const Entry = () => {
                             updataWeight({
                               index: index,
                               value: e.target.value,
-                            })
+                            }),
                           )
                         }
                         onFocus={(e) => e.target.select()}
@@ -380,7 +389,7 @@ const Entry = () => {
                   </SelectContent>
                 </Select>
               </div>
-            ) : null
+            ) : null,
           )}
           <Button data-key="tab" type="submit">
             Save

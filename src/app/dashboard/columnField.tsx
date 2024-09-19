@@ -24,13 +24,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { format } from "date-fns";
-import { updataData } from "./dataSlice";
 import {
   deleteNewData,
   undeleteNewData,
   updataNewData,
 } from "./filterDataSlice";
 import { Checkbox } from "@/components/ui/checkbox";
+import { netWeightChange, weightChange } from "./changeHandler";
 
 interface Column {
   id: string;
@@ -79,24 +79,24 @@ const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
 const handleKeyDown = (
   e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLButtonElement>,
   row: Row,
-  column: Column
+  column: Column,
 ) => {
   keysPressed[e.key] = true;
   if (e.key === "ArrowDown" || e.key === "Enter") {
     e.preventDefault();
-   if(typeof window !== "undefined"){
-    const Element = document.querySelector(
-      `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`
-    ) as HTMLElement;
-    if (Element) {
-      Element.focus();
+    if (typeof window !== "undefined") {
+      const Element = document.querySelector(
+        `[data-row-index='${row.index + 1}'][data-column-name='${column.id}']`,
+      ) as HTMLElement;
+      if (Element) {
+        Element.focus();
+      }
     }
-   }
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    if(typeof window !== "undefined"){
+    if (typeof window !== "undefined") {
       const Element = document.querySelector(
-        `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`
+        `[data-row-index='${row.index - 1}'][data-column-name='${column.id}']`,
       ) as HTMLElement;
       if (Element) {
         Element.focus();
@@ -106,10 +106,11 @@ const handleKeyDown = (
     e.preventDefault();
     const columnIndex = ColumnArray.indexOf(column.id);
     if (ColumnArray.length - 1 >= columnIndex) {
-      if(typeof window !== "undefined"){
+      if (typeof window !== "undefined") {
         const Element = document.querySelector(
-          `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex - 1]
-          }']`
+          `[data-row-index='${row.index}'][data-column-name='${
+            ColumnArray[columnIndex - 1]
+          }']`,
         ) as HTMLElement;
         if (Element) {
           Element.focus();
@@ -120,16 +121,17 @@ const handleKeyDown = (
     e.preventDefault();
     const columnIndex = ColumnArray.indexOf(column.id);
     if (0 <= columnIndex) {
-      if( typeof window !== "undefined"){
+      if (typeof window !== "undefined") {
         const Element = document.querySelector(
-          `[data-row-index='${row.index}'][data-column-name='${ColumnArray[columnIndex + 1]
-          }']`
+          `[data-row-index='${row.index}'][data-column-name='${
+            ColumnArray[columnIndex + 1]
+          }']`,
         ) as HTMLElement;
         if (Element) {
           Element.focus();
         }
       }
-      }
+    }
   }
 };
 
@@ -141,6 +143,8 @@ const onChangeHandle = (value: any, row: Row, column: Column) => {
     value: value,
   };
   dispatch(updataNewData(newArray));
+  weightChange(row, column, value);
+  netWeightChange(row, column, parseFloat(value));
 };
 
 export const InputColumnField = ({
@@ -151,7 +155,7 @@ export const InputColumnField = ({
   column: Column;
 }) => {
   const datas = useSelector(
-    (state: RootState) => state.filterDataReducer.datas
+    (state: RootState) => state.filterDataReducer.datas,
   );
   return (
     <div className="">
@@ -178,17 +182,13 @@ export const ComboboxColumnField = ({
   column: Column;
 }) => {
   const datas = useSelector(
-    (state: RootState) => state.filterDataReducer.datas
+    (state: RootState) => state.filterDataReducer.datas,
   );
   const allData = useSelector((state: RootState) => state.dataReducer.datas);
   const dataList = [...new Set(allData.map((item: any) => item[column.id]))];
-  console.log("Datalist -------",dataList);
-  
   const [open, setOpen] = useState(false);
   const thisValue = datas[row.index][column.id];
 
-  console.log("--------This -------", thisValue);
-  
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>
@@ -231,7 +231,7 @@ export const ComboboxColumnField = ({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        thisValue === dataValue ? "opacity-100" : "opacity-0"
+                        thisValue === dataValue ? "opacity-100" : "opacity-0",
                       )}
                     />
                     {dataValue}
@@ -262,7 +262,7 @@ export const SelectColumnField = ({
   column: Column;
 }) => {
   const datas = useSelector(
-    (state: RootState) => state.filterDataReducer.datas
+    (state: RootState) => state.filterDataReducer.datas,
   );
   const thisValue = datas[row.index][column.id];
   return (
@@ -301,7 +301,7 @@ export const SelectKgColumnField = ({
   column: Column;
 }) => {
   const datas = useSelector(
-    (state: RootState) => state.filterDataReducer.datas
+    (state: RootState) => state.filterDataReducer.datas,
   );
   const thisValue = datas[row.index][column.id] ? "true" : "false";
 
@@ -342,7 +342,6 @@ export const DateColumnField = ({
   const initialDate = new Date(row.getValue(column.id));
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const handleDateSelect = async (selectedDate: Date) => {
-    console.log("selectedDate", selectedDate);
     setSelectedDate(selectedDate);
     setIsPopoverOpen(false);
     onChangeHandle(selectedDate, row, column);
@@ -358,7 +357,7 @@ export const DateColumnField = ({
           onKeyDown={(e) => handleKeyDown(e, row, column)}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !selectedDate && "text-muted-foreground"
+            !selectedDate && "text-muted-foreground",
           )}
           onClick={() => setIsPopoverOpen(true)}
         >

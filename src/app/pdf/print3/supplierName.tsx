@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 const SupplierName = ({ data }) => {
   const firstStartPoint = useAppSelector(
-    (state) => state.print3Slice.firstStartPoint
+    (state) => state.print3Slice.firstStartPoint,
   );
 
   const uniqueFarmer = [...new Set(data.map((item) => item.farmerName))];
@@ -35,11 +35,11 @@ const SupplierName = ({ data }) => {
   const totalNetAmount = totalBikariAmountFixed - totalExpenseFixed;
 
   return (
-    <div>
+    <div className="">
       <div className="text-center">श्री गणेशाय नमः।</div>
       {uniqueFarmer.map((fName, index) => {
         const supplierNameFilter = data.filter(
-          (item) => item.farmerName === fName
+          (item) => item.farmerName === fName,
         );
         return (
           <div key={`${fName}-${index}`}>

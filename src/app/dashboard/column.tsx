@@ -59,7 +59,7 @@ export const columns: ColumnDef<saleData>[] = [
     header: "Cut",
     cell: ({ row, column }) => {
       return (
-        <div className="w-12">
+        <div className="w-fit">
           <InputColumnField row={row} column={column} />
         </div>
       )

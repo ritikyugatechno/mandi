@@ -2,11 +2,9 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import LotFilter from "./lotFilter";
 
 const SupplierList = ({ data, srNo }) => {
-
   const allTotalOtherChargeFromData = data.map((item) => {
     return parseFloat(item.otherChargeTotal);
   });
-  
 
   const uniqueSupplier = [
     ...new Set(data.map((item) => item.supplierName)),
@@ -53,7 +51,10 @@ const SupplierList = ({ data, srNo }) => {
       <Table className="border-2 border-black ">
         <TableBody>
           <TableRow className="border-b-black">
-            <TableCell colSpan={4} className="border-r-[1px] border-r-black">
+            <TableCell
+              colSpan={4}
+              className="border-r-[1px] pl-12 border-r-black"
+            >
               <div className="text-base font-bold">{uniqueSupplier[0]}</div>
               <div>{uniqueFarmer[0]}</div>
               <div>{uniqueItem[0]}</div>
@@ -66,7 +67,7 @@ const SupplierList = ({ data, srNo }) => {
           </TableRow>
           {uniqueFarmer.map((fName: string) => {
             const farmerNameFilter = data.filter(
-              (item) => item.farmerName === fName
+              (item) => item.farmerName === fName,
             );
             return <LotFilter key={fName} data={farmerNameFilter} />;
           })}
@@ -123,7 +124,7 @@ const SupplierList = ({ data, srNo }) => {
             </td>
             <td className="border-y border-black font-bold text-base text-end pr-2">
               {(Math.round(parseFloat(totalAmount.toFixed(2)) / 5) * 5).toFixed(
-                2
+                2,
               )}
             </td>
           </TableRow>

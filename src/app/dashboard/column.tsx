@@ -1,13 +1,21 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ComboboxColumnField, DateColumnField, DeleteColumnField, InputColumnField, SelectColumnField, SelectKgColumnField } from "./columnField";
+import {
+  ComboboxColumnField,
+  DateColumnField,
+  DeleteColumnField,
+  InputColumnField,
+  SelectColumnField,
+  SelectKgColumnField,
+} from "./columnField";
 
 export type saleData = {
   id: number;
   serialNo: number;
   supplierName: string;
   farmerName: string;
+  lot: string;
   itemName: string;
   cnug: number;
   customerName: string;
@@ -25,12 +33,11 @@ export type saleData = {
   grossWeight: number;
   cut: number;
   date: Date;
-  freightKg:number;
-  labourKg:number;
-  freightTotal:number;
-  labourTotal:number;
-  otherChargeTotal:number;
-
+  freightKg: number;
+  labourKg: number;
+  freightTotal: number;
+  labourTotal: number;
+  otherChargeTotal: number;
 };
 
 export const columns: ColumnDef<saleData>[] = [
@@ -55,6 +62,11 @@ export const columns: ColumnDef<saleData>[] = [
     cell: ComboboxColumnField,
   },
   {
+    accessorKey: "lot",
+    header: "Lot",
+    cell: ComboboxColumnField,
+  },
+  {
     accessorKey: "cut",
     header: "Cut",
     cell: ({ row, column }) => {
@@ -62,7 +74,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="w-fit">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -83,7 +95,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -94,7 +106,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -125,7 +137,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -136,7 +148,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -147,7 +159,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -158,7 +170,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -169,7 +181,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="w-96">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -205,7 +217,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -216,7 +228,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
   },
   {
@@ -227,7 +239,7 @@ export const columns: ColumnDef<saleData>[] = [
         <div className="min-w-12">
           <InputColumnField row={row} column={column} />
         </div>
-      )
+      );
     },
-  }
+  },
 ];

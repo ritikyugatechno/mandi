@@ -48,6 +48,7 @@ const ColumnArray: string[] = [
   "vclNo",
   "supplierName",
   "farmerName",
+  "lot",
   "cut",
   "sNug",
   "avgWeight",

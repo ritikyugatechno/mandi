@@ -58,10 +58,10 @@ const SupplierName = ({ data }) => {
                 colSpan={4}
                 className="text-center border-r-[1px] border-r-black"
               >
-                Total Other Charge: {allOtherChargeTotalFixed}
+                Total Other Charge: {allOtherChargeTotalFixed.toFixed(2)}
               </TableCell>
               <TableCell colSpan={4} className="text-center">
-                Total Bikari Amount: {totalBikariAmountFixed}
+                Total Bikari Amount: {totalBikariAmountFixed.toFixed(2)}
               </TableCell>
             </TableRow>
             <TableRow className="border-b-black">
@@ -69,13 +69,13 @@ const SupplierName = ({ data }) => {
                 colSpan={4}
                 className="text-center border-r-[1px] border-r-black"
               >
-                Total Labour: {allLabourTotalFixed}
+                Total Labour: {allLabourTotalFixed.toFixed(2)}
               </TableCell>
               <TableCell
                 colSpan={4}
                 className="text-center border-r-[1px] border-r-black"
               >
-                Total Expense: {totalExpenseFixed}
+                Total Expense: {totalExpenseFixed.toFixed(2)}
               </TableCell>
             </TableRow>
             <TableRow className="border-b-black">
@@ -83,13 +83,13 @@ const SupplierName = ({ data }) => {
                 colSpan={4}
                 className="text-center border-r-[1px] border-r-black"
               >
-                Total Freight: {allFreightTotalFixed}
+                Total Freight: {allFreightTotalFixed.toFixed(2)}
               </TableCell>
               <TableCell
                 colSpan={4}
                 className="text-center border-r-[1px] border-r-black"
               >
-                Net Amount: {totalNetAmount}
+                Net Amount: {totalNetAmount.toFixed(2)}
               </TableCell>
             </TableRow>
           </TableBody>

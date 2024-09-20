@@ -72,12 +72,6 @@ const Entry = () => {
       dispatch(addEntry(FirstEntry));
       // setDate(entryData['date'])
     }
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.altKey && event.key === "s") {
-        event.preventDefault();
-        formSubmit(event, false);
-      }
-    };
     if (typeof window !== "undefined") {
       window.addEventListener("keydown", handleKeyDown);
       return () => {
@@ -86,6 +80,12 @@ const Entry = () => {
     }
   }, [isLoadingFirstEntry, isErrorFirstEntry, FirstEntry, dispatch]);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.altKey && event.key === "s") {
+      event.preventDefault();
+      formSubmit(event, false);
+    }
+  };
   const setNewDate = (e: Date, fieldName: formName) => {
     setDate(e);
     dispatch(updateEntry({ name: fieldName, value: e.toString() }));

@@ -33,16 +33,17 @@ export default async function handler(
       if (data.labourKg) {
         labourTotal = parseFloat(data.labourRate) * avgWeight;
       }
+      let cut = data.cut;
+      if (cut < 0) {
+        cut = 0;
+      }
       let otherChargeTotal = (bikariAmount / 100) * data.otherCharge;
       if (data.typeItem === "daba") {
         freightTotal *= 0.4;
-        labourTotal *= 0.4;
+        labourTotal *= 0.5;
       } else if (data.typeItem === "plate") {
-        freightTotal *= 0.5;
         labourTotal *= 0.5;
       }
-      console.log(data.typeItem);
-      console.log("freightTotal ", freightTotal);
       const updateData = await prisma.formData.update({
         where: { id: data.id },
         data: {
@@ -64,7 +65,7 @@ export default async function handler(
           labourRate: parseFloat(data.labourRate),
           freightKg: data.freightKg,
           labourKg: data.labourKg,
-          cut: data.cut,
+          cut,
           basicAmount,
           bikariAmount,
           avgWeight,
